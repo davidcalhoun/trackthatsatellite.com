@@ -8,35 +8,47 @@ import * as actions from '../../actions';
 import { Route, Match } from 'react-router';
 import { Switch } from 'react-router-dom';
 
+import MapView from '../../pages/MapView/MapView';
+
 import { PAGE_PATHS } from '../../config';
 
 import styles from './App.css';
 
 class App extends Component {
-  render() {
-    const routes = PAGE_PATHS.map(page => {
+  constructor() {
+    super();
+  }
+
+  componentWillMount() {
+    this.routes = PAGE_PATHS.map(page => {
       let element;
       const isIndex = !!page.index;
       const path = (isIndex) ? '/' : `/${page.path}`;
 
-      return <Route
+      // Workaround (see https://github.com/ReactTraining/react-router/issues/5072)
+      const connectedComponent = connect(
+        mapStateToProps,
+        mapDispatchToProps
+      )(page.component);
+
+      const route = <Route
         exact
         key={path}
         path={path}
-        component={() => (<page.component {...this.props} />)
-      }/>;
+        component={connectedComponent}
+      />;
+
+      return route;
     });
+  }
 
-    const temp1 = PAGE_PATHS[0];
-    const temp2 = PAGE_PATHS[1];
-
+  render() {
     return (
       <MuiThemeProvider>
         <div className={styles.container}>
           <Header {...this.props} />
-          { /* Workaround: pass location manually (see https://github.com/ReactTraining/react-router/issues/5072) */ }
           <Switch location={this.props.location}>
-            {routes}
+            {this.routes}
           </Switch>
         </div>
       </MuiThemeProvider>
@@ -45,8 +57,11 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  location: state.router.location,
+  map: state.map,
+  satellite: state.satellite,
   satellites: state.satellites,
-  location: state.router.location
+  user: state.user
 });
 
 const mapDispatchToProps = dispatch => ({
