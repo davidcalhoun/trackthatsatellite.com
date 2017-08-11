@@ -13,7 +13,7 @@ export default class MapWebGL extends Component {
 
   render() {
     return (
-      <div id={this.props.id} />
+      <div id={this.props.id} className={styles.container} />
     );
   }
 }

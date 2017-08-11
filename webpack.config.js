@@ -76,9 +76,15 @@ module.exports = {
     rules: [
       // JSX
       {
+        test: /\.txt$/,
+        use: 'text-loader'
+      },
+
+      // JSX
+      {
         test: /\.jsx?$/,
         include: path.join(__dirname, 'src'),
-        exclude: /react\.js|react-dom|node_modules/,
+        exclude: /react|react-dom|node_modules/,
         use: [
           {
             loader: 'babel-loader',

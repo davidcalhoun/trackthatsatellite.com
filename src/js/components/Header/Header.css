@@ -5,3 +5,7 @@
 .settings {
 
 }
+
+.satelliteDropdown {
+  z-index: 9999;
+}

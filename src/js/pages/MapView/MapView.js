@@ -2,29 +2,32 @@ import React from 'react';
 import tle from 'tle.js';
 import MapWebGL from '../../components/MapWebGL/MapWebGL';
 import { MAPBOX_ACCESS_TOKEN } from '../../config';
-import Toggle from 'material-ui/Toggle';
+import Switch from 'material-ui/Switch';
+import stations from '../../tles/stations.txt';
+import R from 'ramda';
 
 import styles from './MapView.css';
-
-const tleStr = `ISS (ZARYA)
-1 25544U 98067A   17207.85089522  .00000752  00000-0  18587-4 0  9993
-2 25544  51.6402 200.6049 0006226  77.3560 350.9035 15.54225878 67921`;
 
 export default class MapView extends React.Component {
   constructor() {
     super();
 
+    const stationsArr = stations.split('\n');
+    this.stations = R.splitEvery(3, stationsArr);
+    this.tle = this.stations[0];
+
     [
       'addLngLatsToMap',
       'getUserGeolocation',
       'handleToggle',
+      'handleVisibilityChange',
       'mapLoaded',
       'setBearing',
       'updateSatLonLat',
       'updateSatPosition',
       'updateUserPosition',
       'userGeoSuccess',
-      'userGeoError'
+      'userGeoError',
     ].forEach(fn => this[fn] = this[fn].bind(this));
   }
 
@@ -37,6 +40,8 @@ export default class MapView extends React.Component {
     });
 
     this.map.on('load', this.mapLoaded);
+
+    document.addEventListener('visibilitychange', this.handleVisibilityChange, false);
   }
 
   componentWillUnmount() {
@@ -56,12 +61,29 @@ export default class MapView extends React.Component {
     }
   }
 
+  handleVisibilityChange() {
+    const now = Date.now();
+
+    if (document.hidden) {
+      this.docHiddenTimeMS = now;
+    } else {
+      // Page visible again.
+      const MS_IN_TEN_MINUTES = 600000;
+      const shouldMapRefresh = now - this.docHiddenTimeMS > MS_IN_TEN_MINUTES;
+      if (shouldMapRefresh) {
+        console.log('User was away for an extended period, so re-initting map tracks.');
+        this.mapLoaded();
+      }
+    }
+  }
+
   userGeoSuccess(location) {
     const userLonLat = [location.coords.longitude, location.coords.latitude];
     this.props.actions.setUserLonLat(userLonLat);
   }
 
   userGeoError(err) {
+    console.log('error getting geolocation: ', err.message)
     this.props.actions.setUserDeniedGeolocation();
   }
 
@@ -75,7 +97,6 @@ export default class MapView extends React.Component {
       'coordinates': lonLat
     };
     const sourceName = 'user';
-
     const source = this.map.getSource(sourceName);
 
     if (!source) {
@@ -95,7 +116,7 @@ export default class MapView extends React.Component {
         }
       });
     } else {
-      this.map.getSource(sourceName).setData(satPoint);
+      this.map.getSource(sourceName).setData(userPoint);
     }
   }
 
@@ -105,7 +126,6 @@ export default class MapView extends React.Component {
       'coordinates': lonLat
     };
     const sourceName = 'sat';
-
     const source = this.map.getSource(sourceName);
 
     if (!source) {
@@ -138,38 +158,54 @@ export default class MapView extends React.Component {
 
     // todo: construct FeatureCollection instead here?
     llArr.forEach((line, index) => {
-      this.map.addLayer({
-        'id': `track${index}`,
-        'type': 'line',
-        'source': {
-          'type': 'geojson',
-          'data': {
-            'type': 'Feature',
-            'properties': {},
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': line
-            }
-          }
-        },
-        'layout': {
-          'line-join': 'round',
-          'line-cap': 'round'
-        },
-        'paint': {
-          'line-color': lineColors[index],
-          'line-width': 3,
-          'line-opacity': 0.6
+      const sourceName = `track${index}`;
+      const source = this.map.getSource(sourceName);
+
+      const orbitTrackData = {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': line
         }
-      });
+      };
+
+      if (!source) {
+        // init
+        this.map.addLayer({
+          'id': `track${index}`,
+          'type': 'line',
+          'source': {
+            'type': 'geojson',
+            'data': orbitTrackData
+          },
+          'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          'paint': {
+            'line-color': lineColors[index],
+            'line-width': 3,
+            'line-opacity': 0.6
+          }
+        });
+      } else {
+        // update
+        this.map.getSource(sourceName).setData(orbitTrackData);
+      }
+
+
     });
 
   }
 
   updateSatLonLat() {
-    const latLon = tle.getLatLon(tleStr);
+    // Don't update if map isn't onscreen.
+    if (document.hidden) return;
+
+    const latLon = tle.getLatLon(this.tle);
     const lonLatArr = [ latLon.lng, latLon.lat ];
-    const bearing = tle.getSatBearing(tleStr);
+    const bearing = tle.getSatBearing(this.tle);
 
     if (this.is3DView) this.map.setCenter(lonLatArr);
 
@@ -182,7 +218,7 @@ export default class MapView extends React.Component {
   mapLoaded() {
     this.getUserGeolocation();
 
-    const groundTrackArr = tle.getGroundTrackLngLat(tleStr);
+    const groundTrackArr = tle.getGroundTrackLngLat(this.tle);
     this.addLngLatsToMap(groundTrackArr);
     this.updateInterval = window.setInterval(this.updateSatLonLat, 100);
   }
@@ -243,7 +279,7 @@ export default class MapView extends React.Component {
     return (
     <section className={styles.container}>
       <div className={styles.toggle}>
-        <Toggle
+        <Switch
           label="3D View"
           onToggle={this.handleToggle}
           thumbStyle={styles.thumbOff}

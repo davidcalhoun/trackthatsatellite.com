@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Header from '../Header/Header';
+import createMuiTheme from 'material-ui/styles/theme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import * as actions from '../../actions';
 
@@ -13,6 +14,8 @@ import MapView from '../../pages/MapView/MapView';
 import { PAGE_PATHS } from '../../config';
 
 import styles from './App.css';
+
+const theme = createMuiTheme();
 
 class App extends Component {
   constructor() {
@@ -44,7 +47,7 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider theme={theme}>
         <div className={styles.container}>
           <Header {...this.props} />
           <Switch location={this.props.location}>
