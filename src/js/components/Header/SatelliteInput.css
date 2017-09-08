@@ -1,0 +1,11 @@
+.container {
+ display: inline-block;
+}
+
+.dropdown {
+  border: '1px solid #ccc';
+  position: absolute;
+
+  /* TODO: centralize z-indeces in a global file */
+  z-index: 100;
+}

@@ -1,12 +1,30 @@
 .container {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 #map {
   width: 100%;
-  min-height: 500px;
+  flex: 1;
 }
 
-.toggle {
-  width: 150px;
+#toggleThreed {
+
+}
+
+#toggleSatellite {
+
+}
+
+#timeSlider {
+  width: 300px;
+}
+
+.minus {
+
+}
+
+.plus {
+
 }

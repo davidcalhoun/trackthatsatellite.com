@@ -16,6 +16,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.4",
+    "downshift": "^1.4.0",
     "eslint": "^4.3.0",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-airbnb-base": "^11.3.1",
@@ -27,7 +28,8 @@
     "history": "^4.6.3",
     "image-webpack-loader": "^3.3.1",
     "json-loader": "^0.5.7",
-    "material-ui": "v1.0.0-beta.3",
+    "little-time": "^1.1.7",
+    "material-ui": "next",
     "mocha": "^3.4.2",
     "postcss-cssnext": "^3.0.2",
     "postcss-import": "^10.0.0",
@@ -54,7 +56,7 @@
     "webpack-simple-progress-plugin": "^0.0.2"
   },
   "scripts": {
-    "dev": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline",
+    "dev": "cp src/index.html dist/public/index.html && ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline",
     "dist": "./dist.sh"
   }
 }

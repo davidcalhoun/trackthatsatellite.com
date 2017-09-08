@@ -6,38 +6,26 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="robots" content="all">
-    <meta name="author" content="WebMocha, LLC">
-    <meta name="description" content="Newsletter content helper tool by WebMocha">
+    <meta name="author" content="David Calhoun">
+    <meta name="description" content="Map tool for visualizing satellite locations.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="icon" type="image/png" href="favicon.ico" />
-    <script>
-      var isDevMode = !!window.webpackHotUpdate;
 
-      // Only add stylesheet if in prod.
-      if (!isDevMode) {
-        var linkTag = document.createElement('link');
-        linkTag.href = 'styles/app.css';
-        linkTag.media = 'screen, projection';
-        linkTag.rel = 'stylesheet';
-        linkTag.type = 'text/css';
-        document.head.appendChild(linkTag);
-      }
-    </script>
-
-    <link href='https://api.mapbox.com/mapbox-gl-js/v0.38.0/mapbox-gl.css' rel='stylesheet' />
+    <link id="appCSS" href="styles/app.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.css' rel='stylesheet' />
   </head>
 
   <body>
     <div id="app"></div>
     <!-- TODO for prod: react.min.js, react-dom.min.js -->
     <!-- TODO: wrap up all vendor stuff into one file -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/2.8.1/ReactRouter.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.1/react-redux.js"></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/v0.38.0/mapbox-gl.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/16.0.0-rc.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.0.0-rc.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-router/4.2.0/react-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.6/react-redux.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v0.39.1/mapbox-gl.js'></script>
 
     <script src="js/client.min.js"></script>
 
