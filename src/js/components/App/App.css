@@ -12,4 +12,6 @@ html, body {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
 }

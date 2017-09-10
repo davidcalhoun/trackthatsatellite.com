@@ -15,7 +15,9 @@ const initialState = {
 
 function getMatchingTLE(str, satellites) {
   return R.find(sat => {
-    const name = sat[0];
+    if (!sat || sat.length < 3) return false;
+
+    const name = sat[0].trim();
     const catalogID = sat[1].substr(2, 5);
     return str === `${name} (${catalogID})`;
   })(satellites);

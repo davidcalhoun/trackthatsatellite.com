@@ -1,5 +1,5 @@
+import Nav from './Nav';
 import React, { Component, PropTypes } from 'react';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
 import SatelliteInput from './SatelliteInput';
 import stations from '../../tles/stations.txt';
 import R from 'ramda';
@@ -35,11 +35,13 @@ export default class Header extends Component {
     }
 
     return (
-      <header className={styles.container}>
-        <h1 className={styles.heading}>Track That Satellite:</h1>
+      <header
+        className={styles.container}
+        role="banner"
+      >
+        <h1 className={styles.heading}>Track That Satellite</h1>
         <SatelliteInput {...this.props} />
-        <Link to="/" className={styles.map}>Map</Link>
-        <Link to="settings" className={styles.settings}>Settings</Link>
+        <Nav {...this.props} />
       </header>
     );
   }

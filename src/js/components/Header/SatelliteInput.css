@@ -9,3 +9,8 @@
   /* TODO: centralize z-indeces in a global file */
   z-index: 100;
 }
+
+.input {
+  font-size: 1.5rem;
+  padding: 0.1rem 0.25rem;
+}

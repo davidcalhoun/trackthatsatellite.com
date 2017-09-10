@@ -4,6 +4,8 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './SatelliteInput.css';
 
+const placeholderText = 'Satellite name or ID';
+
 function BasicAutocomplete({items, onChange, defaultInputValue, className, value}) {
   return (
     <Downshift onChange={onChange} defaultInputValue={defaultInputValue}>
@@ -16,7 +18,7 @@ function BasicAutocomplete({items, onChange, defaultInputValue, className, value
         highlightedIndex
       }) => (
         <div className={className}>
-          <input {...getInputProps({placeholder: 'Satellite Name'})} />
+          <input className={styles.input} {...getInputProps({placeholder: placeholderText})} />
           {isOpen ? (
             <div className={styles.dropdown}>
               {items
@@ -76,9 +78,12 @@ export default class SatelliteInput extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.satellite.name !== this.props.satellite.name) {
-      this.setState({ autocompleteText: nextProps.satellite.name });
-    }
+
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const satelliteNameMatch = this.props.satellite.name === nextProps.satellite.name;
+    return !satelliteNameMatch;
   }
 
   /**

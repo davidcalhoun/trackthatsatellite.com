@@ -65,10 +65,7 @@ export default class MapView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.mapIsLoaded) {
-      console.warn('Map is not ready');
-      return;
-    }
+    if (!this.mapIsLoaded) return;
 
     const satLonLatChanged = this.props.satellite.lonLat !== nextProps.satellite.lonLat;
     if (satLonLatChanged) {
@@ -111,7 +108,6 @@ export default class MapView extends React.Component {
     this.props.actions.setUserLonLat(userLonLat);
 
     if (!bypassCaching) {
-      console.log(111, location)
       window.localStorage.setItem('geolocation', JSON.stringify({
         coords: {
           longitude: location.coords.longitude,
@@ -254,7 +250,7 @@ export default class MapView extends React.Component {
   updateSatLonLat(optionalProps) {
     const props = optionalProps || this.props;
 
-    if (props.satellite.tle.length === 0) {
+    if (!props.satellite.tle || props.satellite.tle.length === 0) {
       console.warn('No satellite TLE set');
       return;
     }
@@ -315,7 +311,7 @@ export default class MapView extends React.Component {
   updateGroundTrack(optionalProps) {
     const props = optionalProps || this.props;
 
-    if (props.satellite.tle.length === 0) {
+    if (!props.satellite.tle || props.satellite.tle.length === 0) {
       console.warn('No satellite TLE set');
       return;
     }
@@ -399,7 +395,10 @@ export default class MapView extends React.Component {
     const rangeDisplay = this.toFixed(range);
 
     return (
-    <section className={styles.container}>
+    <main
+      className={styles.container}
+      role="main"
+    >
       <div className={styles.toggleContainer}>
         <label htmlFor={styles.toggleThreed}>3D</label>
         <Switch id={styles.toggle} onChange={this.handle3DToggle} />
@@ -433,7 +432,7 @@ export default class MapView extends React.Component {
       <p>Lat/lon/bearing: {lat}, {lon} {bearingDegreesForDisplay}° ({compass})</p>
       <p>Azimuth (compass heading): {azimuthDisplay}°, Elevation: {elevationDisplay}°, Range: {rangeDisplay} km</p>
       <MapWebGL id={styles.map} />
-    </section>
+    </main>
     );
   }
 };
