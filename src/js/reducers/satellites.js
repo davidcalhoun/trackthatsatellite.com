@@ -35,8 +35,6 @@ export default function satellites(state = initialState, action) {
       stateCopy.tles = action.val;
       stateCopy.names = tleToNames(action.val);
 
-      console.log(stateCopy.names)
-
       return stateCopy;
 
     default:
