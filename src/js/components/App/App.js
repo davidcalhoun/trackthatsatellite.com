@@ -16,8 +16,8 @@ import stations from '../../tles/stations.txt';
 import styles from './App.css';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   /**
