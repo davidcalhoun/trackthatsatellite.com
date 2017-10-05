@@ -30,6 +30,9 @@ const store = createStore(
   applyMiddleware(middleware)
 )
 
+// Remove no-js flag on <html>
+document.body.parentElement.classList.remove('no-js');
+
 // Now you can dispatch navigation actions from anywhere!
 // store.dispatch(push('/foo'))
 ReactDOM.render(
