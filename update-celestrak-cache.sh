@@ -45,9 +45,13 @@ declare -a files=("tle-new"
   "other"
 )
 
-for i in "${files[@]}"
+declare -i i=1
+
+for filename in "${files[@]}"
 do
-   curl "${BASE_URL}${i}.txt" > "${OUTPUT_DIR}${i}.txt"
-   # Sleep for a bit - don't hit the server too hard
-   sleep .5
+  echo "Progress: ${i}/${#files[@]}: ${filename}"
+  curl "${BASE_URL}${filename}.txt" > "${OUTPUT_DIR}${filename}.txt"
+  # Sleep for a bit - don't hit the server too hard
+  sleep .5
+  let i++
 done
