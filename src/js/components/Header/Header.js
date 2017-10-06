@@ -1,7 +1,6 @@
 import Nav from './Nav';
 import React, { Component, PropTypes } from 'react';
 import SatelliteInput from './SatelliteInput';
-import stations from '../../tles/stations.txt';
 import R from 'ramda';
 
 import styles from './Header.css';
