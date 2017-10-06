@@ -77,6 +77,7 @@ export default class MapView extends React.Component {
 
     if (document.hidden) {
       this.docHiddenTimeMS = now;
+      // TODO: remove satellite icon
     } else {
       // Page visible again.
       const MS_IN_TEN_MINUTES = 600000;
