@@ -55,6 +55,7 @@ class App extends Component {
   componentWillMount() {
     this.reduxifyRoutes();
 
+    // Fill initial dropdown with space stations.  Other TLEs will come in async later.
     const satellites = stations.split('\n');
     const satellitesArr = R.splitEvery(3, satellites);
     this.props.actions.setSatellites(satellitesArr);
