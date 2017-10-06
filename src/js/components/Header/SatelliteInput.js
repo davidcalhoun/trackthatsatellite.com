@@ -4,11 +4,14 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './SatelliteInput.css';
 
-const placeholderText = 'Satellite name or ID';
+const placeholderText = 'Satellite name/id';
 
-function BasicAutocomplete({items, onChange, defaultInputValue, className, value}) {
+function BasicAutocomplete({items, onChange, onClick, onBlur, defaultInputValue}) {
   return (
-    <Downshift onChange={onChange} defaultInputValue={defaultInputValue}>
+    <Downshift
+      onChange={onChange}
+      defaultInputValue={defaultInputValue}
+    >
       {({
         getInputProps,
         getItemProps,
@@ -17,10 +20,17 @@ function BasicAutocomplete({items, onChange, defaultInputValue, className, value
         selectedItem,
         highlightedIndex
       }) => (
-        <div className={className}>
-          <input className={styles.input} {...getInputProps({placeholder: placeholderText})} />
+        <div className={styles.container}>
+          <input
+            className={styles.input}
+            {...getInputProps({
+              placeholder: placeholderText,
+              onClick,
+              onBlur
+            })}
+          />
           {isOpen ? (
-            <div className={styles.dropdown}>
+            <div className={styles.dropdown} style={{border: '1px solid #ccc'}}>
               {items
                 .filter(
                   i =>
@@ -30,7 +40,7 @@ function BasicAutocomplete({items, onChange, defaultInputValue, className, value
                 .map((item, index) => (
                   <div
                     {...getItemProps({item})}
-                    key={index}
+                    key={item}
                     style={{
                       backgroundColor:
                         highlightedIndex === index ? 'gray' : 'white',
@@ -57,7 +67,9 @@ export default class SatelliteInput extends Component {
     };
 
     [
-      'handleChange'
+      'handleChange',
+      'handleClick',
+      'handleBlur'
     ].forEach(fn => {
       if (typeof this[fn] !== 'function') {
         console.warn(`constructor error: could not find function ${fn}`);
@@ -98,6 +110,19 @@ export default class SatelliteInput extends Component {
     this.props.actions.setSatelliteTLE(selectedItem, this.props.satellites.tles);
   }
 
+  handleClick(evt) {
+    this.prevValue = evt.target.value;
+    evt.target.value = '';
+  }
+
+  handleBlur(evt) {
+    const shouldRestorePrevValue = evt.target.value === '';
+
+    if (shouldRestorePrevValue) {
+      evt.target.value = this.prevValue || this.props.satellite.name
+    }
+  }
+
   render() {
     if (this.state.hasError) {
       return (<div><h1>Error in SatelliteInput</h1></div>)
@@ -109,6 +134,8 @@ export default class SatelliteInput extends Component {
       <BasicAutocomplete
         items={this.props.satellites.names}
         onChange={this.handleChange}
+        onClick={this.handleClick}
+        onBlur={this.handleBlur}
         className={this.props.className || styles.container}
         defaultInputValue={this.props.satellite.name}
       />
