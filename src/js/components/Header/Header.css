@@ -1,8 +1,10 @@
 .container {
-  padding: 0 0.5em;
+  padding: 0.5rem 0.5rem 0;
+  display: flex;
 }
 
 .heading {
+  flex: 1;
   display: inline-block;
   margin-right: 1rem;
   letter-spacing: -0.01em;

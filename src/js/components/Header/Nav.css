@@ -1,5 +1,7 @@
 .container {
-
+  display: inline-block;
+  margin-left: 1rem;
+  line-height: 2rem;
 }
 
 .navLink {
@@ -7,6 +9,7 @@
   text-decoration: none;
   font-size: 1.5rem;
   padding-right: 0.25rem;
+  vertical-align: middle;
 }
 
 .navLink:active,
