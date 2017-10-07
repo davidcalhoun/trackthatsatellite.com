@@ -69,6 +69,11 @@ export default class MapView extends React.Component {
     if (satelliteChanged || userTimeChanged) {
       this.updateSatLonLat(nextProps);
       this.updateGroundTrack(nextProps);
+
+      if (!this.props.map.is3dView) {
+        this.props.map.mapInstance.setCenter([0, 0]);
+        this.props.map.mapInstance.setZoom(0);
+      }
     }
   }
 
