@@ -16,4 +16,7 @@ printf '\n\x1B[32m%s\033[0m\n' 'Installing server packages'
 cp src/index.html dist/public/index.html
 cp src/favicon.ico dist/public/favicon.ico
 
+mkdir dist/public/data
+cp src/js/tles/_all-tles.txt dist/public/data/tles.txt
+
 printf '\n\x1B[32m%s\033[0m\n' 'Outputted to /dist'
