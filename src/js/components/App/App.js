@@ -11,13 +11,43 @@ import { Switch } from 'react-router-dom';
 import MapView from '../../pages/MapView/MapView';
 
 import { PAGE_PATHS } from '../../config';
-import stations from '../../tles/stations.txt';
+import issTLE from '../../tles/_iss.txt';
 
 import styles from './App.css';
+
+const tlesPath = '/data/tles.txt';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    [
+      'fetchAllTLEs',
+      'processRawTLEs'
+    ].forEach(fn => this[fn] = this[fn].bind(this));
+  }
+
+  fetchAllTLEs(path) {
+    fetch(path)
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response;
+      } else {
+        var error = new Error(response.statusText);
+        error.response = response;
+        throw error;
+      }
+    })
+    .then(response => response.text())
+    .then(rawTLEs => this.processRawTLEs(rawTLEs))
+    .catch(error => console.log('request failed', error));
+  }
+
+  processRawTLEs(rawText) {
+    const arr = rawText.split('\n');
+    const groupedArr = R.splitEvery(3, arr);
+
+    this.props.actions.setSatellites(groupedArr);
   }
 
   /**
@@ -55,10 +85,12 @@ class App extends Component {
   componentWillMount() {
     this.reduxifyRoutes();
 
-    // Fill initial dropdown with space stations.  Other TLEs will come in async later.
-    const satellites = stations.split('\n');
-    const satellitesArr = R.splitEvery(3, satellites);
-    this.props.actions.setSatellites(satellitesArr);
+    // Async - fetch all tles.
+    this.fetchAllTLEs(tlesPath);
+
+    // Fill initial satellite list with ISS (International Space Station).
+    // Other TLEs will come in async later.
+    this.processRawTLEs(issTLE);
   }
 
   render() {

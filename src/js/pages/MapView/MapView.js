@@ -198,7 +198,23 @@ export default class MapView extends React.Component {
       '#aaaaaa',  // prev orbit
       '#6d6d6d',  // cur orbit
       '#61d877'   // next orbit
-    ]
+    ];
+
+    // Clear out old tracks.
+    [1, 2, 3].forEach(index => {
+      const sourceName = `track${index}`;
+
+      const source = map.getSource(sourceName);
+
+      source && source.setData({
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': [ [] ]
+        }
+      });
+    });
 
     // todo: construct FeatureCollection instead here?
     llArr.forEach((line, index) => {
@@ -235,7 +251,7 @@ export default class MapView extends React.Component {
         });
       } else {
         // update
-        map.getSource(sourceName).setData(orbitTrackData);
+        source.setData(orbitTrackData);
       }
     });
   }

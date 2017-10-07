@@ -93,9 +93,15 @@ export default class SatelliteInput extends Component {
 
   }
 
+  doArraysMatchQuick(arr1, arr2) {
+    return arr1.length === arr2.length;
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     const satelliteNameMatch = this.props.satellite.name === nextProps.satellite.name;
-    return !satelliteNameMatch;
+    const satelliteListMatch = this.doArraysMatchQuick(this.props.satellites.names, nextProps.satellites.names);
+
+    return !(satelliteNameMatch && satelliteListMatch);
   }
 
   /**

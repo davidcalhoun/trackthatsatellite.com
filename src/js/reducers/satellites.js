@@ -14,13 +14,21 @@ const tleToNameAndCatalogIDStr = (tleArr) => {
   return `${name} (${catalogID})`;
 }
 
-const alphabetize = (arr) => R.sort(R.comparator(R.lt), arr);
+const alphabetize = arr => R.sort(R.comparator(R.lt), arr);
 
-const filterEmptyVals = (arr) => R.reject((o) => o.length < 3, arr);
+const filterEmptyVals = arr => R.reject((o) => !o || o.length < 3, arr);
 
-const tleToNamesPipe = R.pipe(filterEmptyVals, tlesToStrs, alphabetize);
+const filterDupeVals = arr => {
+  // Convert to Set, which has unique keys.
+  const set = new Set(arr);
 
-const tleToNames = (arr) => tleToNamesPipe(arr);
+  // Convert back to array.
+  return [...set];
+};
+
+const tleToNamesPipe = R.pipe(filterEmptyVals, tlesToStrs, filterDupeVals, alphabetize);
+
+const tleToNames = arr => tleToNamesPipe(arr);
 
 export default function satellites(state = initialState, action) {
   const stateCopy = Object.assign({}, state);
