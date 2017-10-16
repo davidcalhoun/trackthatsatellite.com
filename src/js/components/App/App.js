@@ -61,6 +61,7 @@ class App extends Component {
     this.routes = PAGE_PATHS.map(page => {
       const isIndex = !!page.index;
       const path = (isIndex) ? '/' : `/${page.path}`;
+      const isExact = !isIndex;
 
       /**
        * Connects each component to redux.
@@ -72,7 +73,7 @@ class App extends Component {
       )(page.component);
 
       const route = <Route
-        exact
+        exact={isExact}
         key={path}
         path={path}
         component={connectedComponent}

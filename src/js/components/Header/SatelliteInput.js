@@ -86,11 +86,64 @@ export default class SatelliteInput extends Component {
 
   componentDidMount() {
     const defaultSatelliteStr = 'ISS (ZARYA) (25544)';
-    this.handleChange(defaultSatelliteStr);
+
+    if (!this.getURLQueryParam('satellite')) {
+      this.handleChange(defaultSatelliteStr);
+    }
+  }
+
+  toURLFriendlyStr(str) {
+    return str.replace(/\s/gi, '-').replace(/\(|\)/gi, '').toLowerCase();
+  }
+
+  getSatelliteFromURL(pathname) {
+    const splitPathname = window.location.pathname.split('-');
+    const lastPart = splitPathname[splitPathname.length - 1];
+    const intLastPart = +lastPart;
+    const isInt = Number.isInteger(intLastPart);
+
+    console.log(444, isInt, lastPart)
+  }
+
+  getURLQueryParam(param, search = window.location.search) {
+    const minusQuestionMark = search.replace('?', '');
+    const splitParams = minusQuestionMark.split('&');
+    const keyVals = splitParams.map(keyval => {
+      const keyvalSplit = keyval.split('=');
+      return {
+        key: keyvalSplit[0],
+        val: keyvalSplit[1]
+      };
+    });
+
+    const filteredKeyVals = keyVals.filter(keyval => keyval.key === param);
+
+    return (filteredKeyVals[0] && filteredKeyVals[0].val) || null;
+  }
+
+  getSatelliteID(str) {
+    const split = str.split('-');
+    const lastVal = split[split.length - 1];
+    return parseInt(lastVal);
+  }
+
+  getFullSatelliteNameFromID(id, props = this.props) {
+    const matches = props.satellites.names.filter(name => name.match(id));
+
+    return matches[0] || '';
   }
 
   componentWillReceiveProps(nextProps) {
+    const urlSatelliteQuery = this.getURLQueryParam('satellite');
+    const satelliteURLFriendly = this.toURLFriendlyStr(nextProps.satellite.name);
+    const satelliteMatchesURL = urlSatelliteQuery && (urlSatelliteQuery === satelliteURLFriendly);
+    const satelliteListMatch = this.doArraysMatchQuick(this.props.satellites.names, nextProps.satellites.names);
 
+    if (!satelliteMatchesURL && !satelliteListMatch) {
+      const urlSatelliteID = this.getSatelliteID(urlSatelliteQuery);
+      const urlSatelliteStr = this.getFullSatelliteNameFromID(urlSatelliteID, nextProps);
+      this.props.actions.setSatelliteTLE(urlSatelliteStr, nextProps.satellites.tles);
+    }
   }
 
   doArraysMatchQuick(arr1, arr2) {
@@ -114,6 +167,12 @@ export default class SatelliteInput extends Component {
 
   handleChange(selectedItem) {
     this.props.actions.setSatelliteTLE(selectedItem, this.props.satellites.tles);
+
+    const satellite = this.toURLFriendlyStr(selectedItem);
+    this.props.history.replace({
+      pathname: this.props.history.location.pathname,
+      search: `?satellite=${satellite}`
+    });
   }
 
   handleClick(evt) {
