@@ -50,7 +50,7 @@
     "script-loader": "^0.7.0",
     "style-loader": "^0.18.2",
     "text-loader": "^0.0.1",
-    "tle.js": "1.0.7",
+    "tle.js": "^1.0.19",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.6.1",
     "webpack-simple-progress-plugin": "^0.0.2"
