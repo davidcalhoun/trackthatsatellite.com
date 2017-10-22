@@ -1,6 +1,5 @@
 import React from 'react';
-import TLEJS from 'tle.js';
-const tle = new TLEJS();
+import tle from 'tle.js';
 import MapControls from '../../components/MapControls/MapControls';
 import SatelliteMetaData from '../../components/SatelliteMetaData/SatelliteMetaData';
 import MapWebGL from '../../components/MapWebGL/MapWebGL';

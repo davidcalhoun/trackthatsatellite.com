@@ -7,7 +7,7 @@
   "author": "David Calhoun <david.b.calhoun@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "babel-core": "^6.25.0",
+    "babel-cli": "^6.26.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-react-html-attrs": "^2.0.0",
     "babel-plugin-transform-class-properties": "^6.24.1",
@@ -59,5 +59,8 @@
     "dev": "cp src/index.html dist/public/index.html && ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline",
     "dist": "./dist.sh",
     "tles": "./update-celestrak-cache.sh"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^2.9.0"
   }
 }

@@ -7,6 +7,7 @@ const postCSSImport = require('postcss-import');
 const cssnext = require('postcss-cssnext');
 const postcssReporter = require('postcss-reporter');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Relative path of CSS assets.
 const CSS_ASSETS_BASE = (isProd) ? '/assets/' : '';
@@ -197,6 +198,8 @@ module.exports = {
     // DEV plugins
 
     // Displays Webpack progress bar on command line.
-    new SimpleProgressPlugin()
+    new SimpleProgressPlugin(),
+
+    new BundleAnalyzerPlugin()
   ]
 };
