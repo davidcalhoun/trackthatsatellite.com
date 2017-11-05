@@ -56,7 +56,7 @@
     "webpack-simple-progress-plugin": "^0.0.2"
   },
   "scripts": {
-    "dev": "cp src/index.html dist/public/index.html && ./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline",
+    "dev": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline",
     "dist": "./dist.sh",
     "tles": "./update-celestrak-cache.sh"
   },
