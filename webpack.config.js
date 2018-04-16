@@ -195,12 +195,7 @@ module.exports = {
       },
       beautify: false,
       preserveComments: false
-    })
-  ] : [
-    // DEV plugins
-
-    // Displays Webpack progress bar on command line.
-    new SimpleProgressPlugin(),
+    }),
 
     new BundleAnalyzerPlugin({
       // Can be `server`, `static` or `disabled`.
@@ -229,5 +224,10 @@ module.exports = {
       // Log level. Can be 'info', 'warn', 'error' or 'silent'.
       logLevel: 'info'
     })
+  ] : [
+    // DEV plugins
+
+    // Displays Webpack progress bar on command line.
+    new SimpleProgressPlugin()
   ]
 };

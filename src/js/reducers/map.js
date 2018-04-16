@@ -19,6 +19,7 @@ export default function map(state = initialState, action) {
       stateCopy.mapInstance = new mapboxgl.Map({
         container: action.val.container,
         style: stateCopy.style,
+        fadeDuration: 0
       });
 
       stateCopy.onStyleLoaded = action.val.onStyleLoaded;

@@ -1,5 +1,4 @@
 import Downshift from 'downshift';
-import R from 'ramda';
 import React, { Component, PropTypes } from 'react';
 
 import styles from './SatelliteInput.css';
@@ -80,13 +79,10 @@ export default class SatelliteInput extends Component {
     });
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     const defaultSatelliteStr = 'ISS (ZARYA) (25544)';
 
+    // User arrived at base path, so redirect to ISS path.
     if (!this.getURLQueryParam('satellite')) {
       this.handleChange(defaultSatelliteStr);
     }
@@ -138,15 +134,16 @@ export default class SatelliteInput extends Component {
     const satelliteURLFriendly = this.toURLFriendlyStr(nextProps.satellite.name);
     const satelliteMatchesURL = urlSatelliteQuery && (urlSatelliteQuery === satelliteURLFriendly);
     const satelliteListMatch = this.doArraysMatchQuick(this.props.satellites.names, nextProps.satellites.names);
+    const satelliteMissingTLE = !this.props.satellite.tle;
 
-    if (!satelliteMatchesURL && !satelliteListMatch) {
+    if ((!satelliteMatchesURL || satelliteMissingTLE) && !satelliteListMatch) {
       const urlSatelliteID = this.getSatelliteID(urlSatelliteQuery);
       const urlSatelliteStr = this.getFullSatelliteNameFromID(urlSatelliteID, nextProps);
       this.props.actions.setSatelliteTLE(urlSatelliteStr, nextProps.satellites.tles);
     }
   }
 
-  doArraysMatchQuick(arr1, arr2) {
+  doArraysMatchQuick(arr1 = [], arr2 = []) {
     return arr1.length === arr2.length;
   }
 

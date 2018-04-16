@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Header from '../Header/Header';
-import R from 'ramda';
+import splitEvery from 'ramda/src/splitEvery';
+import littleTime from 'little-time';
 import * as actions from '../../actions';
 
 import { Route, Match } from 'react-router';
@@ -11,11 +12,12 @@ import { Switch } from 'react-router-dom';
 import MapView from '../../pages/MapView/MapView';
 
 import { PAGE_PATHS } from '../../config';
-import issTLE from '../../tles/_iss.txt';
 
 import styles from './App.css';
 
 const tlesPath = '/data/tles.txt';
+
+const DATE_FORMATTED = littleTime().format('YYYYMMDD');
 
 class App extends Component {
   constructor(props) {
@@ -28,12 +30,13 @@ class App extends Component {
   }
 
   fetchAllTLEs(path) {
-    fetch(path)
+    // Fetch TLEs, cache busting via date, since TLEs should be updated daily.
+    fetch(`${ path }?date=${ DATE_FORMATTED }`)
     .then((response) => {
       if (response.status >= 200 && response.status < 300) {
         return response;
       } else {
-        var error = new Error(response.statusText);
+        const error = new Error(response.statusText);
         error.response = response;
         throw error;
       }
@@ -45,7 +48,7 @@ class App extends Component {
 
   processRawTLEs(rawText) {
     const arr = rawText.split('\n');
-    const groupedArr = R.splitEvery(3, arr);
+    const groupedArr = splitEvery(3, arr);
 
     this.props.actions.setSatellites(groupedArr);
   }
@@ -88,10 +91,6 @@ class App extends Component {
 
     // Async - fetch all tles.
     this.fetchAllTLEs(tlesPath);
-
-    // Fill initial satellite list with ISS (International Space Station).
-    // Other TLEs will come in async later.
-    this.processRawTLEs(issTLE);
   }
 
   render() {

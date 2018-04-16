@@ -5,8 +5,7 @@ import MapControls from '../../components/MapControls/MapControls';
 import SatelliteMetaData from '../../components/SatelliteMetaData/SatelliteMetaData';
 import MapWebGL from '../../components/MapWebGL/MapWebGL';
 
-import R from 'ramda';
-
+import { toFixed } from '../../utils';
 import styles from './MapView.css';
 
 export default class MapView extends React.Component {
@@ -65,7 +64,7 @@ export default class MapView extends React.Component {
     }
 
     const userTimeChanged = this.props.user.timestampOverride !== nextProps.user.timestampOverride;
-    const satelliteChanged = this.props.satellite.name !== nextProps.satellite.name;
+    const satelliteChanged = this.props.satellite.tle !== nextProps.satellite.tle;
     if (satelliteChanged || userTimeChanged) {
       this.updateSatLonLat(nextProps);
       this.updateGroundTrack(nextProps);
@@ -89,7 +88,7 @@ export default class MapView extends React.Component {
       const shouldMapRefresh = now - this.docHiddenTimeMS > MS_IN_TEN_MINUTES;
 
       if (shouldMapRefresh) {
-        console.log('User was away for an extended period.');
+        console.info('User was away for an extended period - updating geolocation.');
         this.getUserGeolocation();
       }
     }
@@ -136,8 +135,15 @@ export default class MapView extends React.Component {
     const map = this.props.map.mapInstance;
 
     const userPoint = {
-      'type': 'Point',
-      'coordinates': lonLat
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": lonLat
+      },
+      "properties": {
+          "title": "Your Location",
+          "icon": "marker"
+      }
     };
     const sourceName = 'user';
     const source = map.getSource(sourceName);
@@ -152,10 +158,18 @@ export default class MapView extends React.Component {
       map.addLayer({
         'id': sourceName,
         'source': sourceName,
-        'type': 'circle',
-        'paint': {
-          'circle-radius': 10,
-          'circle-color': 'green'
+        'type': 'symbol',
+        "layout": {
+            "icon-image": "{icon}-15",
+            "text-field": "{title}",
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-offset": [0, 0.6],
+            "text-anchor": "top"
+        },
+        "paint": {
+            "text-color": "#212121",
+            "text-halo-color": "#fff",
+            "text-halo-width": 0.5
         }
       });
     } else {
@@ -168,9 +182,25 @@ export default class MapView extends React.Component {
 
     const map = this.props.map.mapInstance;
 
+    const satTitle = `${ toFixed(lonLat[1]) }, ${ toFixed(lonLat[0]) }`;
+
+    const lookAngles = this.props.satellite.lookAngles;
+    const { elevation, azimuth, range } = lookAngles;
+    const elevationDisplay = toFixed(elevation);
+    const azimuthDisplay = toFixed(azimuth);
+    const rangeDisplay = toFixed(range);
+
     const satPoint = {
-      'type': 'Point',
-      'coordinates': lonLat
+      "type": "Feature",
+      "geometry": {
+          "type": "Point",
+          "coordinates": lonLat
+      },
+      "properties": {
+          "title": satTitle,
+          "icon": "rocket",
+          "description": `<h4>Position relative to observer</h4><p>Azimuth (compass heading): ${ azimuthDisplay }°</p><p>Elevation: ${ elevationDisplay }°</p><p>Range: ${ rangeDisplay } km</p>`
+      }
     };
     const sourceName = 'sat';
     const source = map.getSource(sourceName);
@@ -185,11 +215,50 @@ export default class MapView extends React.Component {
       map.addLayer({
         'id': sourceName,
         'source': sourceName,
-        'type': 'circle',
-        'paint': {
-          'circle-radius': 10,
-          'circle-color': '#007cbf'
+        'type': 'symbol',
+        "layout": {
+            "icon-image": "{icon}-15",
+            "text-field": "{title}",
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-offset": [0, 0.6],
+            "text-anchor": "top"
+        },
+        "paint": {
+            "text-color": "#212121",
+            "text-halo-color": "#fff",
+            "text-halo-width": 0.5
         }
+      });
+
+      const popup = new mapboxgl.Popup({
+          closeButton: false,
+          closeOnClick: false
+      });
+
+      map.on('mouseenter', sourceName, function(e) {
+          // Change the cursor style as a UI indicator.
+          map.getCanvas().style.cursor = 'pointer';
+
+          var coordinates = e.features[0].geometry.coordinates.slice();
+          var description = e.features[0].properties.description;
+
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+              coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
+          // Populate the popup and set its coordinates
+          // based on the feature found.
+          popup.setLngLat(coordinates)
+              .setHTML(description)
+              .addTo(map);
+      });
+
+      map.on('mouseleave', sourceName, function() {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
       });
     } else {
       map.getSource(sourceName).setData(satPoint);
@@ -199,10 +268,25 @@ export default class MapView extends React.Component {
   addLngLatsToMap(llArr) {
     const map = this.props.map.mapInstance;
 
-    const lineColors = [
-      '#aaaaaa',  // prev orbit
-      '#6d6d6d',  // cur orbit
-      '#61d877'   // next orbit
+    const lineStyles = [
+      {
+        // previous orbit
+        color: '#bfbfbf',
+        opacity: 0.4,
+        width: 3
+      },
+      {
+        // current orbit
+        color: '#ffff00',
+        opacity: 0.8,
+        width: 3
+      },
+      {
+        // next orbit
+        color: '#ffff00',
+        opacity: 0.4,
+        width: 3
+      }
     ];
 
     // Clear out old tracks.
@@ -249,9 +333,9 @@ export default class MapView extends React.Component {
             'line-cap': 'round'
           },
           'paint': {
-            'line-color': lineColors[index],
-            'line-width': 3,
-            'line-opacity': 0.6
+            'line-color': lineStyles[index].color,
+            'line-width': lineStyles[index].width,
+            'line-opacity': lineStyles[index].opacity
           }
         });
       } else {
@@ -262,15 +346,15 @@ export default class MapView extends React.Component {
   }
 
   updateSatLonLat(optionalProps) {
+    // Noop if map isn't onscreen.
+    if (document.hidden) return;
+
     const props = optionalProps || this.props;
 
     if (!props.satellite.tle || props.satellite.tle.length === 0) {
-      console.warn('No satellite TLE set');
+      //console.info('No satellite TLE set');
       return;
     }
-
-    // Don't update if map isn't onscreen.
-    if (document.hidden) return;
 
     const timestamp = (props.user.timestampOverride) ? props.user.timestampOverride : Date.now();
     const userLonLat = props.user.lonLat;
@@ -331,7 +415,7 @@ export default class MapView extends React.Component {
     const props = optionalProps || this.props;
 
     if (!props.satellite.tle || props.satellite.tle.length === 0) {
-      console.warn('No satellite TLE set');
+      //console.info('No satellite TLE set');
       return;
     }
 
@@ -339,6 +423,12 @@ export default class MapView extends React.Component {
     const timestamp = (userTimestampOverride) ? userTimestampOverride : Date.now();
     const groundTrackArr = tle.getGroundTrackLngLat(props.satellite.tle, 1000, timestamp);
     this.addLngLatsToMap(groundTrackArr);
+
+    // Pre-compute future ground tracks
+    const ONE_HOUR_IN_MS = 1000 * 60 * 60;
+    window.setTimeout(() => tle.getGroundTrackLngLat(props.satellite.tle, 1000, timestamp + ONE_HOUR_IN_MS), 1000);
+    window.setTimeout(() => tle.getGroundTrackLngLat(props.satellite.tle, 1000, timestamp + ONE_HOUR_IN_MS * 2), 2000);
+    window.setTimeout(() => tle.getGroundTrackLngLat(props.satellite.tle, 1000, timestamp + ONE_HOUR_IN_MS * 3), 3000);
   }
 
   render() {
@@ -347,7 +437,6 @@ export default class MapView extends React.Component {
       className={styles.container}
       role="main"
     >
-      <SatelliteMetaData {...this.props} />
       <MapControls {...this.props} />
       <MapWebGL id={styles.map} />
     </main>

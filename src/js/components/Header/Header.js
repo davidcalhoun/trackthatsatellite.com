@@ -1,7 +1,6 @@
 import Nav from './Nav';
 import React, { Component, PropTypes } from 'react';
 import SatelliteInput from './SatelliteInput';
-import R from 'ramda';
 
 import styles from './Header.css';
 
@@ -10,14 +9,6 @@ export default class Header extends Component {
     super(props);
 
     this.state = { hasError: false };
-  }
-
-  componentWillMount() {
-
-  }
-
-  componentWillReceiveProps(nextProps) {
-
   }
 
   /**

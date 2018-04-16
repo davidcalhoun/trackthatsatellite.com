@@ -58,8 +58,4 @@ done
 # Combine all TLEs.
 cd "${OUTPUT_DIR}"
 rm _all-tles.txt || true
-rm _iss.txt || true
 cat * >> _all-tles.txt
-
-# Extract ISS info to bundle with initial JS payload.
-head -3 stations.txt >> _iss.txt

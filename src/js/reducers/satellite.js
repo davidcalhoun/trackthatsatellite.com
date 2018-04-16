@@ -1,4 +1,4 @@
-import R from 'ramda';
+import find from 'ramda/src/find';
 
 import { REDUX_ACTIONS } from '../config';
 
@@ -14,7 +14,7 @@ const initialState = {
 };
 
 function getMatchingTLE(str, satellites) {
-  return R.find(sat => {
+  return find(sat => {
     if (!sat || sat.length < 3) return false;
 
     const name = sat[0].trim();

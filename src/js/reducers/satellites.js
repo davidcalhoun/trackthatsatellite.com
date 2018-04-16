@@ -1,4 +1,10 @@
 import R from 'ramda';
+import map from 'ramda/src/map';
+import sort from 'ramda/src/sort';
+import comparator from 'ramda/src/comparator';
+import reject from 'ramda/src/reject';
+import pipe from 'ramda/src/pipe';
+import lt from 'ramda/src/lt';
 
 import { REDUX_ACTIONS } from '../config';
 
@@ -6,7 +12,7 @@ const initialState = {
   tles: []
 };
 
-const tlesToStrs = (arr) => R.map(tleToNameAndCatalogIDStr, arr);
+const tlesToStrs = (arr) => map(tleToNameAndCatalogIDStr, arr);
 
 const tleToNameAndCatalogIDStr = (tleArr) => {
   const name = tleArr[0].trim();
@@ -14,9 +20,9 @@ const tleToNameAndCatalogIDStr = (tleArr) => {
   return `${name} (${catalogID})`;
 }
 
-const alphabetize = arr => R.sort(R.comparator(R.lt), arr);
+const alphabetize = arr => sort(comparator(lt), arr);
 
-const filterEmptyVals = arr => R.reject((o) => !o || o.length < 3, arr);
+const filterEmptyVals = arr => reject((o) => !o || o.length < 3, arr);
 
 const filterDupeVals = arr => {
   // Convert to Set, which has unique keys.
@@ -26,7 +32,7 @@ const filterDupeVals = arr => {
   return [...set];
 };
 
-const tleToNamesPipe = R.pipe(filterEmptyVals, tlesToStrs, filterDupeVals, alphabetize);
+const tleToNamesPipe = pipe(filterEmptyVals, tlesToStrs, filterDupeVals, alphabetize);
 
 const tleToNames = arr => tleToNamesPipe(arr);
 
