@@ -61,6 +61,6 @@
     "tles": "./update-celestrak-cache.sh"
   },
   "devDependencies": {
-    "webpack-bundle-analyzer": "^2.9.0"
+    "webpack-bundle-analyzer": "^3.3.2"
   }
 }
