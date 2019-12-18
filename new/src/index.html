@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html class="no-js loading" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="icon" type="image/png" href="favicon.ico" />
+    <link id="appCSS" href="styles/app.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v0.44.2/mapbox-gl.css' rel='stylesheet' />
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="content-language" content="en" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="all">
+    <meta name="author" content="David Calhoun">
+    <meta name="description" content="Map tool for visualizing satellite locations.">
+
+    <style>
+.loading .loading-indicator {
+	display: block;
+	position: absolute;
+	left: 49vw;
+	top: 49vh;
+}
+
+.loading-indicator {
+	display: none;
+}
+
+.sbl-square-to-circle {
+	height: 48px;
+	width: 48px;
+	color: #5a5a5a;
+	animation: rotateSquareToCircle 3s ease infinite;
+}
+.sbl-square-to-circle div {
+	height: 0;
+	width: 0;
+	box-sizing: border-box;
+	border: 5px solid;
+	position: absolute;
+	top: 40%;
+}
+.sbl-square-to-circle div:nth-child(1) {
+	left: 0;
+	animation: moveRight 2s ease infinite;
+}
+.sbl-square-to-circle div:nth-child(2) {
+	left: 0;
+	right: 0;
+	margin: auto;
+	border-radius: 50%;
+	animation: toCircle 2s ease infinite;
+}
+.sbl-square-to-circle div:nth-child(3) {
+	right: 0;
+	animation: moveLeft 2s ease infinite;
+}
+
+@keyframes moveLeft {
+	25% {
+		transform: translateX(-19px);
+	}
+	50% {
+		transform: translateX(0);
+	}
+	75% {
+		transform: translateX(-19px);
+		border-radius: 50%;
+	}
+}
+
+@keyframes moveRight {
+	25% {
+		transform: translateX(19px);
+	}
+	50% {
+		transform: translateX(0);
+	}
+	75% {
+		transform: translateX(19px);
+		border-radius: 50%;
+	}
+}
+
+@keyframes toCircle {
+	50% {
+		border-radius: 0%;
+	}
+}
+
+@keyframes rotateSquareToCircle {
+	50% {
+		transform: rotate(-270deg);
+	}
+}
+
+	</style>
+  </head>
+  <body>
+	<div class="loading-indicator sbl-square-to-circle">
+	    <div></div>
+	    <div></div>
+	    <div></div>
+	</div>
+  	<div id="app"></div>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-83942647-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-83942647-2');
+    </script>
+  </body>
+</html>

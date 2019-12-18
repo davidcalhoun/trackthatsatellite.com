@@ -1,5 +1,7 @@
 {
-  "rules": {},
+  "rules": {
+    "indent": "off"
+  },
   "env": {
     "es6": true,
     "browser": true

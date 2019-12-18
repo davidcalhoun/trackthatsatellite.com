@@ -1,105 +1,65 @@
-import React from "react";
+import React, { Fragment, useEffect } from "react";
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useRouteMatch,
-  useParams
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link,
+	Redirect,
+	useRouteMatch,
+	useParams
 } from "react-router-dom";
-import { hot } from 'react-hot-loader/root';
+import { hot } from "react-hot-loader/root";
+import ReactDOM from "react-dom";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import { createLogger } from "redux-logger";
+
+import reducer from "./reducers";
+import { defaultSat } from "./consts";
+import { Map, VisibleSatellites, Settings } from "./pages";
+import { Header } from "./components";
+import styles from "./app.css";
+
+const middleware = [ thunk ]
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(createLogger())
+}
+
+const store = createStore(
+  reducer,
+  applyMiddleware(...middleware)
+)
 
 function App() {
-  return (
-    <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/users">Users</Link>
-            </li>
-            <li>
-              <Link to="/topics">Topics</Link>
-            </li>
-          </ul>
-        </nav>
+	document.documentElement.classList.remove("loading");
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/topics">
-            <Topics />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
-}
+	useEffect(() => {
+		// action - request geolocation
+	});
 
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
-
-function Topics() {
-  let match = useRouteMatch();
-
-  return (
-    <div>
-      <h2>Topics</h2>
-
-      <ul>
-        <li>
-          <Link to={`${match.url}/components`}>Components</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-          </Link>
-        </li>
-      </ul>
-
-      {/* The Topics page has its own <Switch> with more routes
-          that build on the /topics URL path. You can think of the
-          2nd <Route> here as an "index" page for all topics, or
-          the page that is shown when no topic is selected */}
-      <Switch>
-        <Route path={`${match.path}/:topicId`}>
-          <Topic />
-        </Route>
-        <Route path={match.path}>
-          <h3>Please select a topic.</h3>
-        </Route>
-      </Switch>
-    </div>
-  );
-}
-
-function Topic() {
-  let { topicId } = useParams();
-  return <h3>Requested topic ID: {topicId}</h3>;
+	return (
+		<Provider store={store}>
+			<Router>
+				<React.StrictMode>
+					<Header />
+					<Switch>
+						<Redirect exact from="/" to={`/map/${defaultSat}`} />
+						<Redirect exact from="/map" to={`/map/${defaultSat}`} />
+						<Route path={`/map/:satellites`}>
+							<Map />
+						</Route>
+						<Route path="/visible-satellites-overhead">
+							<VisibleSatellites />
+						</Route>
+						<Route path="/settings">
+							<Settings />
+						</Route>
+					</Switch>
+				</React.StrictMode>
+			</Router>
+		</Provider>
+	);
 }
 
 export default hot(App);

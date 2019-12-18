@@ -1,0 +1,21 @@
+:global html {
+	display: flex;
+	flex-direction: column;
+}
+
+:global body {
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	width: 100vw;
+	font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+:global #app {
+	flex: 1;
+	flex-direction: column;
+	display: flex;
+}
+

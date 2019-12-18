@@ -1,0 +1,55 @@
+.container {
+	display: flex;
+	padding: 0.1rem 1rem;
+	align-items: center;
+}
+
+.nav {
+	display: inline-block;
+	flex: 1;
+}
+
+.nav ul {
+	list-style: none;
+	padding-left: 0.2rem;
+}
+
+.nav ul li {
+	display: inline-block;
+}
+
+.nav ul li:not(:last-child) {
+	padding-right: 0.5rem;
+}
+
+.nav a {
+	color: #000079;
+}
+
+.nav a:hover {
+	color: #0000e3;
+}
+
+.nav a:active,
+.nav a:focus {
+	color: #1e56ff;
+}
+
+.navIcon {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	fill: currentColor;
+	margin-right: 0.5rem;
+}
+
+
+.title {
+	margin: 0 1rem 0 0;
+	display: inline-block;
+	font-size: 1.3rem;
+}
+
+.search {
+	min-width: 22rem;
+}
