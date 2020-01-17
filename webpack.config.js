@@ -163,10 +163,10 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-  // if (argv.hot) {
-  //   // Cannot use 'contenthash' when hot reloading is enabled.
-  //   config.output.filename = "[name].[hash].js";
-  // }
+  if (argv.hot) {
+    // Hack: cannot use 'contenthash' when hot reloading is enabled.
+    config.output.filename = "[name].[hash].js";
+  }
 
   return config;
 };
