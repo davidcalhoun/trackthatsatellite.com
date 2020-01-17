@@ -2,12 +2,13 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const package = require("./package.json");
+const postcssCustomMedia = require('postcss-custom-media');
 
 const config = {
-  entry: ["react-hot-loader/patch", "./src/index.js"],
+  entry: ["./src/index.js"],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].[contenthash].js",
+    filename: "[name].[hash].js",
     publicPath: "/"
   },
   module: {
@@ -16,26 +17,6 @@ const config = {
         test: /\.(js|jsx)$/,
         use: "babel-loader",
         exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              importLoaders: 1
-            }
-          },
-          {
-            loader: "postcss-loader",
-            options: {
-              plugins: () => [require("autoprefixer")]
-            }
-          }
-        ],
-        exclude: /\.module\.css$/
       },
       {
         test: /\.svg$/,
@@ -63,9 +44,14 @@ const config = {
               modules: true
             }
           },
-          "postcss-loader"
-        ],
-        include: /\.module\.css$/
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: () => [postcssCustomMedia(/* pluginOptions */), require("autoprefixer")]
+            }
+          }
+        ]
       },
       {
         test: /\.(txt)$/i,
@@ -79,9 +65,7 @@ const config = {
   },
   resolve: {
     extensions: [".js", ".jsx"],
-    alias: {
-      "react-dom": "@hot-loader/react-dom"
-    }
+    alias: {}
   },
   devServer: {
     contentBase: "./dist",
@@ -117,10 +101,10 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-  if (argv.hot) {
-    // Cannot use 'contenthash' when hot reloading is enabled.
-    config.output.filename = "[name].[hash].js";
-  }
+  // if (argv.hot) {
+  //   // Cannot use 'contenthash' when hot reloading is enabled.
+  //   config.output.filename = "[name].[hash].js";
+  // }
 
   return config;
 };

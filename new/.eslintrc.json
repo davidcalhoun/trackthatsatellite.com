@@ -19,6 +19,7 @@
     "SharedArrayBuffer": "readonly"
   },
   "plugins": [
-    "react"
+    "react",
+    "react-hooks"
   ]
 }

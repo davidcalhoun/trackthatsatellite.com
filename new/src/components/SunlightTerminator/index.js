@@ -1,0 +1,51 @@
+import React, { Fragment, useState, useEffect } from "react";
+import ReactMapboxGl, {
+	Layer,
+	Feature,
+	ScaleControl,
+	ZoomControl,
+	RotationControl
+} from "react-mapbox-gl";
+import { getSunlightTerminatorCoords } from "../../utils";
+
+export default function SunlightTerminator({ timestampMS = Date.now() }) {
+	const coordinates = getSunlightTerminatorCoords(timestampMS);
+
+	// TODO find which pole is in darness, adjust lat to -90 or 90 accordingly
+	const fillCoords = [
+		[
+			[180, 90],
+			[-179.99999999, 90],
+			[-179.99999999, coordinates[0][1]],
+			...coordinates,
+			[180, coordinates[coordinates.length - 1][1]]
+		]
+	];
+
+	console.log(222, fillCoords)
+
+	return (
+		<Fragment>
+			{/* <Layer */}
+			{/* 	key={coordinates[0].toString()} */}
+			{/* 	type="line" */}
+			{/* 	paint={{ */}
+			{/* 		"line-color": "red", */}
+			{/* 		"line-width": 2 */}
+			{/* 	}} */}
+			{/* > */}
+			{/* 	<Feature coordinates={coordinates} /> */}
+			{/* </Layer> */}
+			<Layer
+				key={`${coordinates[0].toString()}-fill`}
+				type="fill"
+				paint={{
+					"fill-color": "black",
+					"fill-opacity": 0.75
+				}}
+			>
+				<Feature coordinates={fillCoords} />
+			</Layer>
+		</Fragment>
+	);
+}

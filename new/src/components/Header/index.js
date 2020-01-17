@@ -12,9 +12,10 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { connect } from "react-redux";
-import { tlesToAutocompleteOptions } from "../../utils";
+import { tlesToAutocompleteOptions, useWindowResize } from "../../utils";
 import { path } from "ramda";
 import { setSelectedSatellites } from "../../actions";
+import { BREAKPOINTS, defaultSatId } from "../../consts";
 
 import styles from "./index.css";
 
@@ -28,12 +29,14 @@ const svgPaths = {
 };
 
 function SearchBox({ tles, className, selectedSatellites = [], onSelectedSatelliteChange }) {
-	const [inputValue, setInputValue] = useState("");
+	const [inputValue, setInputValue] = useState('');
 
 	useEffect(() => {
 		const selectedSatName = path([0, 0], selectedSatellites) || "";
 		setInputValue(selectedSatName.trim());
-	}, selectedSatellites);
+
+		console.log('what', selectedSatName)
+	}, [selectedSatellites]);
 
 	function onInputChange(event, value, reason) {
 		const isUserInput = reason === "input";
@@ -80,12 +83,35 @@ function NavIcon(props) {
 	);
 }
 
-function Header({ tles, selectedSatellites, updateSelectedSatellites }) {
+function Header({ tles, selectedSatellites, updateSelectedSatellites, currentView }) {
+	const [{width, height, breakpoint}, {addResizeListener, removeResizeListener}] = useWindowResize(BREAKPOINTS);
+
+	useEffect(() => {
+		console.log(2222, width, height, breakpoint)
+	}, [width, height, breakpoint]);
+
+	useEffect(() => {
+		if (!tles[defaultSatId]) return; 
+		updateSelectedSatellites([defaultSatId]);
+	}, [tles]);
+
 	const handleSatelliteChange = (event, options) => {
 		if (!options) return;
 		const { noradID } = options;
 		updateSelectedSatellites([noradID]);
 	}
+
+	useEffect(() => {
+		document.documentElement.classList.remove("no-js");
+
+		addResizeListener();
+
+		return () => {
+			removeResizeListener();
+		}
+	}, []);
+
+	console.log(444, selectedSatellites)
 
 	return (
 		<header className={styles.container}>
@@ -94,42 +120,47 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites }) {
 				<ul>
 					<li>
 						<Link to="/map" replace>
-							<Button variant="contained" color="primary">
+							<Button variant="contained" color={ currentView === "map" ? "primary" : "default" }>
 								<NavIcon pathD={svgPaths.map} />
-								<span>Map View</span>
+								<span>Map</span>
 							</Button>
 						</Link>
 					</li>
 					<li>
 						<Link to="/visible-satellites-overhead" replace>
-							<Button variant="contained" color="primary">
+							<Button variant="contained" color={ currentView === "overhead" ? "primary" : "default" }>
 								<NavIcon pathD={svgPaths.overheadSatellites} />
-								<span>Overhead Satellites view</span>
+								<span>Overhead Satellites</span>
 							</Button>
 						</Link>
 					</li>
-					<li>
-						<Link to="/settings" replace>
-							<Button variant="contained" color="primary">
-								<NavIcon pathD={svgPaths.settings} />
-								<span>Settings</span>
-							</Button>
-						</Link>
-					</li>
+					{/* <li> */}
+					{/* 	<Link to="/settings" replace> */}
+					{/* 		<Button variant="contained" color="primary"> */}
+					{/* 			<NavIcon pathD={svgPaths.settings} /> */}
+					{/* 			<span>Settings</span> */}
+					{/* 		</Button> */}
+					{/* 	</Link> */}
+					{/* </li> */}
 				</ul>
 			</nav>
-			<SearchBox
-				className={styles.search}
-				tles={tles}
-				selectedSatellites={selectedSatellites}
-				onSelectedSatelliteChange={handleSatelliteChange}
-			/>
+			{
+				currentView === "map" && (
+					<SearchBox
+						className={styles.search}
+						tles={tles}
+						selectedSatellites={selectedSatellites}
+						onSelectedSatelliteChange={handleSatelliteChange}
+					/>
+				)
+			}
 		</header>
 	);
 }
 
 const mapStateToProps = (state /*, ownProps*/) => {
 	return {
+		currentView: state.view.currentView,
 		tles: state.tles.all,
 		selectedSatellites: state.tles.selectedSatellites
 	};

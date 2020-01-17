@@ -4,6 +4,8 @@ import * as TLEJS from "tle.js";
 const tlejs = new TLEJS();
 
 export { default as useSatellitePosition } from './useSatellitePosition';
+export { default as useWindowResize } from './useWindowResize';
+export * from './sunRiseSetTimes';
 
 export const getNORADSatNum = satetelliteNameInURL => {
   const pieces = satetelliteNameInURL.split("-");
@@ -16,7 +18,7 @@ export const latLngForDisplay = ([lon, lat] = []) => {
 }
 
 const toFullYear = twoDigitYear => {
-	const date = new Date(`January 5, ${ twoDigitYear }`);
+	const date = new Date(`January 1, ${ twoDigitYear }`);
 	return date.getFullYear();
 }
 
@@ -76,3 +78,4 @@ export const satsToURLString = tles => {
 		return accum.concat(`${ name }-${ noradID }`);
 	}, "");
 }
+

@@ -1,5 +1,11 @@
 .container {
+	display: block;
+	width: 100px;
+}
 
+.container :global .mapboxgl-popup-content {
+	background-color: white;
+	padding: 0.5rem;
 }
 
 .container p {
@@ -10,7 +16,12 @@
 	margin: 0.5rem 0 0.5rem;
 }
 
+.header {
+
+}
+
+.main {
+}
+
 .footer {
-	display: flex;
-	justify-content: center;
 }

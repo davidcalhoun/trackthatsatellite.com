@@ -24,7 +24,13 @@ import homeSVG from "../static/home.svg";
 import satelliteSVG from "../static/fa-satellite.svg";
 import { UPDATE_VIEW, fetchGeolocation, fetchAllTLEs } from "../actions";
 import { getNORADSatNum, latLngForDisplay, satsToURLString } from "../utils";
-import { GroundTrack, SatellitePosition, MapPopup } from "../components";
+import {
+    GroundTrack,
+    SatellitePosition,
+    MapPopup,
+    MapIcon,
+    SunlightTerminator
+} from "../components";
 import * as TLEJS from "tle.js";
 const tlejs = new TLEJS();
 
@@ -33,23 +39,31 @@ const MapboxGl = ReactMapboxGl({
 });
 
 export function Map(props) {
-    const { fetchLocation, position, tles, fetchTLEs, selectedSatellites } = props;
+    const {
+        fetchLocation,
+        position,
+        tles,
+        fetchTLEs,
+        selectedSatellites
+    } = props;
     let match = useRouteMatch();
     let { satellites: satellitesInURL } = useParams();
     const [groundTracks, setGroundTracks] = useState([]);
     const history = useHistory();
     const [popup, setPopup] = useState({ popupIsVisible: false });
-    const { tle: popupTLE, lngLatArr: popupLngLat, isVisible: popupIsVisible, name: popupSatName, elevation: popupSatElevation } = popup;
+    const {
+        tle: popupTLE,
+        lngLatArr: popupLngLat,
+        isVisible: popupIsVisible,
+        name: popupSatName,
+        elevation: popupSatElevation
+    } = popup;
 
     const layerId = true ? "satellite" : "outdoors";
     const style = `mapbox://styles/mapbox/${layerId}-v9`;
 
-    const homeIcon = new Image(20, 20);
-    homeIcon.src = homeSVG;
-    const images = ["home-icon", homeIcon];
-
     function init() {
-        document.title = `Map - ${ siteName }`;
+        document.title = `Map - ${siteName}`;
 
         props.updateView("map");
 
@@ -58,7 +72,9 @@ export function Map(props) {
         }
 
         if (Object.keys(tles).length === 0) {
-            fetchTLEs({ selectedSatellites: [getNORADSatNum(satellitesInURL)] });
+            fetchTLEs({
+                selectedSatellites: [getNORADSatNum(satellitesInURL)]
+            });
         }
     }
     useEffect(init, []);
@@ -66,15 +82,19 @@ export function Map(props) {
     useEffect(() => {
         const selectedSats = satsToURLString(selectedSatellites);
 
-        if (selectedSats && satellitesInURL && satellitesInURL !== selectedSats) {
-            history.replace(`/map/${ selectedSats }`);
+        if (
+            selectedSats &&
+            satellitesInURL &&
+            satellitesInURL !== selectedSats
+        ) {
+            history.replace(`/map/${selectedSats}`);
         }
     }, [selectedSatellites]);
 
-    const { coords } = position || { coords: {latitude: 0, longitude: 0} };
+    const { coords } = position || { coords: { latitude: 0, longitude: 0 } };
     const { latitude, longitude } = coords;
 
-    function updatePopup({isVisible, tle, lngLatArr, name, elevation}) {
+    function updatePopup({ isVisible, tle, lngLatArr, name, elevation }) {
         setPopup({
             isVisible,
             tle,
@@ -83,6 +103,8 @@ export function Map(props) {
             elevation
         });
     }
+
+    console.log(888, position);
 
     return (
         <MapboxGl
@@ -93,6 +115,7 @@ export function Map(props) {
             center={[-0.120736, 51.5118219]}
             circleRadius={30}
         >
+            <SunlightTerminator />
             <ZoomControl />
             <RotationControl style={{ top: 80 }} />
 
@@ -103,45 +126,33 @@ export function Map(props) {
                     tle={popupTLE}
                     name={popupSatName}
                     elevation={popupSatElevation}
-                    onClose={() => { setPopup({...popup, isVisible: false}) }}
+                    onClose={() => {
+                        setPopup({ ...popup, isVisible: false });
+                    }}
                 />
             )}
 
-            {
-                selectedSatellites.map(tle => {
-                    return (
-                        <Fragment key={tle}>
-                            <SatellitePosition
-                                tle={tle}
-                                updatePopup={updatePopup}
-                                popupIsVisible={popupIsVisible}
-                            />
-                            <GroundTrack
-                                tle={tle}
-                                baseTime={Date.now()}
-                            />
-                        </Fragment>
-                    );
-                })
-            }
-
-            {
-                position && (
-                    <Layer
-                        type="symbol"
-                        id="home"
-                        layout={{
-                            "icon-image": "home-icon",
-                            "icon-allow-overlap": true
-                        }}
-                        images={images}
-                    >
-                        <Feature
-                            coordinates={[longitude, latitude]}
+            {selectedSatellites.map(tle => {
+                return (
+                    <Fragment key={tle}>
+                        <SatellitePosition
+                            tle={tle}
+                            updatePopup={updatePopup}
+                            popupIsVisible={popupIsVisible}
                         />
-                    </Layer>
-                )
-            }
+                        <GroundTrack tle={tle} baseTime={Date.now()} />
+                    </Fragment>
+                );
+            })}
+
+            <MapIcon
+                name="home"
+                longitude={longitude || 0}
+                latitude={latitude || 0}
+                src={homeSVG}
+            />
+
+
         </MapboxGl>
     );
 }

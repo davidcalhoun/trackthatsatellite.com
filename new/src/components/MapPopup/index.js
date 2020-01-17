@@ -15,10 +15,21 @@ export default function MapPopup(props) {
 	const { tle, lngLat, name, onClose, elevation } = props;
 
 	return (
-		<Popup coordinates={lngLat} className={styles.container}>
-			<p>{name}</p>
-			<p>Position: {latLngForDisplay(lngLat)}</p>
-			<p>Elevation: { elevation.toFixed(2) }°</p>
+		<Popup
+			coordinates={lngLat}
+			className={styles.container}
+			offset={{
+				bottom: [0, -38]
+			}}
+			anchor="bottom"
+		>
+			<header className={styles.header}>
+				<p>{name}</p>
+			</header>
+			<div className={styles.main}>
+				<p>Position: {latLngForDisplay(lngLat)}</p>
+				<p>Elevation: {elevation.toFixed(2)}°</p>
+			</div>
 			<footer className={styles.footer}>
 				<Button variant="contained" color="primary" onClick={onClose}>
 					Close

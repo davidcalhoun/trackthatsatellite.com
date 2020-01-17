@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { connect } from 'react-redux';
 import { VisibleSatellitesProjection } from "react-hook-visible-satellites";
-import sampleTLES from "../data/tles.txt";
 import { siteName } from "../consts";
 import { UPDATE_VIEW, fetchGeolocation, fetchAllTLEs } from "../actions";
 import { getNORADSatNum } from "../utils";
