@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -r dist/*",
+    "clean": "rm -r dist/* || true",
     "build-dev": "npm run clean && webpack -d --mode development",
     "build-prod": "npm run clean && webpack -p --mode production",
     "start": "webpack-dev-server --hot --mode development",
@@ -44,6 +44,7 @@
     "style-loader": "^1.0.0",
     "url-loader": "^3.0.0",
     "webpack": "^4.41.2",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
   },
