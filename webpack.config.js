@@ -2,13 +2,20 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const package = require("./package.json");
-const postcssCustomMedia = require('postcss-custom-media');
+const postcssCustomMedia = require("postcss-custom-media");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
+
+const reactRegexp = /[\\/]node_modules[\\/](react|react-dom|react-is)[\\/]/;
+const satelliteRegexp = /[\\/]node_modules[\\/](satellite.js)[\\/]/;
+const mapboxRegexp = /[\\/]node_modules[\\/](mapbox-gl)[\\/]/;
+const materialRegexp = /[\\/]node_modules[\\/](@material-ui)[\\/]/;
 
 const config = {
   entry: ["./src/index.js"],
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].[hash].js",
+    filename: "[name].[contenthash].js",
     publicPath: "/"
   },
   module: {
@@ -48,7 +55,10 @@ const config = {
             loader: "postcss-loader",
             options: {
               ident: "postcss",
-              plugins: () => [postcssCustomMedia(/* pluginOptions */), require("autoprefixer")]
+              plugins: () => [
+                postcssCustomMedia(/* pluginOptions */),
+                require("autoprefixer")
+              ]
             }
           }
         ]
@@ -82,17 +92,69 @@ const config = {
         title: "Track That Satellite"
       },
       minify: false,
-      chunks: ["vendors", "runtime", "main"],
+      chunks: [
+        "satellite",
+        "react",
+        "mapbox",
+        "material",
+        "vendor",
+        "runtime",
+        "main"
+      ],
       chunksSortMode: "manual" // manual: sort in the order of the chunks array
-    })
+    }),
+    new BundleAnalyzerPlugin()
   ],
   optimization: {
     runtimeChunk: "single",
+    moduleIds: "hashed", // makes sure hashes don't change unexpectedly
     splitChunks: {
       cacheGroups: {
+        react: {
+          test: reactRegexp,
+          name: "react",
+          chunks: "all",
+          enforce: true
+        },
+        satellite: {
+          test: satelliteRegexp,
+          name: "satellite",
+          chunks: "all",
+          enforce: true
+        },
+        mapbox: {
+          test: mapboxRegexp,
+          name: "mapbox",
+          chunks: "all",
+          enforce: true
+        },
+        material: {
+          test: materialRegexp,
+          name: "material",
+          chunks: "all",
+          enforce: true
+        },
         vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendors",
+          test(mod) {
+            // exclude anything outside node modules
+            if (!mod.context.includes("node_modules")) {
+              return false;
+            }
+
+            // exclude other explicit chunk deps
+            if (
+              reactRegexp.test(mod.context) ||
+              satelliteRegexp.test(mod.context) ||
+              mapboxRegexp.test(mod.context) ||
+              materialRegexp.test(mod.context)
+            ) {
+              return false;
+            }
+
+            // return all other node modules
+            return true;
+          },
+          name: "vendor",
           chunks: "all"
         }
       }
