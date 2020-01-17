@@ -34,8 +34,6 @@ function SearchBox({ tles, className, selectedSatellites = [], onSelectedSatelli
 	useEffect(() => {
 		const selectedSatName = path([0, 0], selectedSatellites) || "";
 		setInputValue(selectedSatName.trim());
-
-		console.log('what', selectedSatName)
 	}, [selectedSatellites]);
 
 	function onInputChange(event, value, reason) {
@@ -87,7 +85,7 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 	const [{width, height, breakpoint}, {addResizeListener, removeResizeListener}] = useWindowResize(BREAKPOINTS);
 
 	useEffect(() => {
-		console.log(2222, width, height, breakpoint)
+
 	}, [width, height, breakpoint]);
 
 	useEffect(() => {
@@ -110,8 +108,6 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 			removeResizeListener();
 		}
 	}, []);
-
-	console.log(444, selectedSatellites)
 
 	return (
 		<header className={styles.container}>

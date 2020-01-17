@@ -104,8 +104,6 @@ export function Map(props) {
         });
     }
 
-    console.log(888, position);
-
     return (
         <MapboxGl
             style={style}
