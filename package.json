@@ -65,9 +65,6 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   },
-  "optionalDependencies": {
-    "react-transition-group": "^4.3.0"
-  },
   "jest": {
     "moduleNameMapper": {
       "\\.(css)$": "identity-obj-proxy"
