@@ -128,7 +128,8 @@ const DEGREES_PER_HOUR = 360 / 24;
 const getDayOfYear = function(timestampMS) {
 	const time = new Date(timestampMS);
 	var onejan = new Date(time.getFullYear(), 0, 1);
-	return Math.ceil((time - onejan) / 86400000);
+	const output = Math.ceil((time - onejan) / 86400000);
+	return output;
 };
 
 const degToRad = function(num) {

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import ReactMapboxGl, {
 	Layer,
 	Feature,
@@ -9,7 +9,17 @@ import ReactMapboxGl, {
 import { getSunlightTerminatorCoords } from "../../utils";
 
 export default function SunlightTerminator({ timestampMS = Date.now() }) {
-	const coordinates = getSunlightTerminatorCoords(timestampMS);
+	const [coordinates, setCoordinates] = useState(null);
+
+	function init() {
+		console.time("getSunlightTerminatorCoords");
+		const coords = getSunlightTerminatorCoords(timestampMS);
+		console.timeEnd("getSunlightTerminatorCoords");
+		setCoordinates(coords);
+	}
+	useEffect(init, []);
+
+	if(!coordinates) return null;
 
 	// TODO find which pole is in darness, adjust lat to -90 or 90 accordingly
 	const fillCoords = [
@@ -21,8 +31,6 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 			[180, coordinates[coordinates.length - 1][1]]
 		]
 	];
-
-	console.log(222, fillCoords)
 
 	return (
 		<Fragment>

@@ -49,6 +49,7 @@ export function Map(props) {
     let match = useRouteMatch();
     let { satellites: satellitesInURL } = useParams();
     const [groundTracks, setGroundTracks] = useState([]);
+    const [sunTerminatorTS, setSunTerminatorTS] = useState(null);
     const history = useHistory();
     const [popup, setPopup] = useState({ popupIsVisible: false });
     const {
@@ -76,6 +77,8 @@ export function Map(props) {
                 selectedSatellites: [getNORADSatNum(satellitesInURL)]
             });
         }
+
+        setSunTerminatorTS(Date.now());
     }
     useEffect(init, []);
 
@@ -113,7 +116,7 @@ export function Map(props) {
             center={[-0.120736, 51.5118219]}
             circleRadius={30}
         >
-            <SunlightTerminator />
+            <SunlightTerminator timestampMS={sunTerminatorTS} />
             <ZoomControl />
             <RotationControl style={{ top: 80 }} />
 
