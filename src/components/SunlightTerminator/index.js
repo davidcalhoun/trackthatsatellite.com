@@ -19,9 +19,21 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 	}
 	useEffect(init, []);
 
-	if(!coordinates) return null;
+	console.log(444, coordinates)
 
-	// TODO find which pole is in darness, adjust lat to -90 or 90 accordingly
+	if(!coordinates || coordinates.length === 0) return null;
+
+	// TODO find which pole is in darkness, adjust lat to -90 or 90 accordingly
+	// const fillCoords = [
+	// 	[
+	// 		[180, 90],
+	// 		[-179.99999999, 90],
+	// 		[-179.99999999, coordinates[0][1]],
+	// 		...coordinates,
+	// 		[180, coordinates[coordinates.length - 1][1]]
+	// 	]
+	// ];
+
 	const fillCoords = [
 		[
 			[180, 90],

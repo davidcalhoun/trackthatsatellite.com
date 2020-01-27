@@ -14,32 +14,111 @@ const areTimesNearby = function(ts1, ts2, maxDiffMS = 60000) {
 	return Math.abs(ts1 - ts2) < maxDiffMS;
 };
 
-// TODO: cache lastLat, speed up
+export const isInSunlight = (timestampMS, [lng, lat]) => {
+	const sunriseTime = sunrise(timestampMS, lat, lng);
+	const sunsetTime = sunset(timestampMS, lat, lng);
+
+	if (sunriseTime === null && sunsetTime === null) {
+		// long winter/summer
+		return null;
+	}
+//console.log(88, sunriseTime, sunsetTime, new Date(timestampMS))
+	if (sunsetTime < sunriseTime) {
+		return timestampMS < sunsetTime;
+	} else {
+		return timestampMS > sunriseTime && timestampMS < sunsetTime;
+	}
+// 
+// 	return timestampMS > sunriseTime && timestampMS < sunsetTime;
+};
+
+export const extendsOverTerminator = (timestampMS, coords1, coords2) => {
+	const coords1IsInSunlight = isInSunlight(timestampMS, coords1);
+	const coords2IsInSunlight = isInSunlight(timestampMS, coords2);
+
+	//console.log(555, coords1IsInSunlight, coords2IsInSunlight)
+
+	if (coords1IsInSunlight === null && coords2IsInSunlight === null) {
+		return null;
+	}
+
+	if (coords1IsInSunlight === null && typeof coords2IsInSunlight === 'boolean' ||
+		coords2IsInSunlight === null && typeof coords1IsInSunlight === 'boolean') {
+		return !coords2IsInSunlight;
+	}
+
+	return (
+		(coords1IsInSunlight && !coords2IsInSunlight) ||
+		(coords2IsInSunlight && !coords1IsInSunlight)
+	);
+};
+
+const getTerminatorForLng = (timestampMS, lng) => {
+	let tries = 1;
+	let curLat = -90;
+	let step = 10;
+	while (curLat < 90) {
+		const crossesTerminator = extendsOverTerminator(timestampMS, [lng, curLat], [lng, curLat + step]);
+
+		if (crossesTerminator) {
+			// Smooth out curves on extreme lats.
+			const stepGoal = (curLat > -50 && curLat < 50) ? 1 : 0.03;
+
+			if (step <= stepGoal) {
+				// precise enough, so finish up
+				//console.log(111, `${curLat}, ${lng}; ${curLat + step}, ${lng}`, curLat + step, isInSunlight(timestampMS, [lng, curLat]), isInSunlight(timestampMS, [lng, curLat + step]));
+				if (crossesTerminator !== null) {
+					return [lng, curLat];
+				} else {
+					return null;
+				}
+				
+			} else {
+				// passed terminator, figure out which half of area contains terminator
+				// (binary search)
+
+				if (
+					extendsOverTerminator(
+						timestampMS,
+						[lng, curLat],
+						[lng, curLat + (step / 2)]
+					)
+				) {
+					// first half (south)
+				} else {
+					// second half (north)
+					// advance
+					curLat = curLat + (step / 2);
+				}
+
+				step /= 2;
+			}
+		} else {
+			curLat += step;
+		}
+
+		tries++;
+	}
+};
+
 export const getSunlightTerminatorCoords = function(timestampMS = Date.now()) {
 	let coords = [];
 
 	let curLng = -180;
-	while (curLng < 181) {
-		let isDone = false;
-		let curLat = -90;
-		while (!isDone) {
-			const sunriseTimeMS = sunrise(timestampMS, curLat, curLng);
-			const sunsetTimeMS = sunset(timestampMS, curLat, curLng);
-			const isNearSunriseTerminator = areTimesNearby(sunriseTimeMS, timestampMS);
-			const isNearSunsetTerminator = areTimesNearby(sunsetTimeMS, timestampMS);
-			if (isNearSunriseTerminator || isNearSunsetTerminator) {
-				coords.push([curLng, curLat]);
-				isDone = true;
-			}
+	while (curLng < 180) {
+		// Drawing from the antemeridian eastward.
+		const lngLat = getTerminatorForLng(timestampMS, curLng);
 
-			if(curLat >= 90) {
-				// not found - pole in permanent summer or winter
-				isDone = true;
-			}
-
-			curLat += 0.5;
+		if (lngLat) {
+			coords.push(lngLat);
 		}
-		curLng += 0.5;
+
+		if (lngLat && (lngLat[1] < -50 || lngLat[1] > 50)) {
+			// extreme lats require greater precision due to map distortion
+			curLng += 0.5;
+		} else {
+			curLng += 2;
+		}
 	}
 
 	return coords;
@@ -96,6 +175,11 @@ const sunriseSet = function(timestampMS, latitude, longitude, sunrise, zenith) {
 		(cosDeg(zenith) - sinDec * sinDeg(latitude)) /
 		(cosDec * cosDeg(latitude));
 
+	if (cosLocalHourAngle < -1 || cosLocalHourAngle > 1) {
+		// no sunrise/sunset (long winter or summer)
+		return null;
+	}
+
 	localHourAngle = acosDeg(cosLocalHourAngle);
 
 	if (sunrise) {
@@ -116,7 +200,7 @@ const sunriseSet = function(timestampMS, latitude, longitude, sunrise, zenith) {
 	midnight.setUTCMonth(timeObj.getUTCMonth());
 	midnight.setUTCDate(timeObj.getUTCDate());
 
-	var milli = midnight.getTime() + time * 60 * 60 * 1000;
+	var milli = midnight.getTime() + (time * 60 * 60 * 1000);
 
 	return new Date(milli);
 };
@@ -133,31 +217,34 @@ const getDayOfYear = function(timestampMS) {
 };
 
 const degToRad = function(num) {
-	return (num * Math.PI) / 180;
+	return num * Math.PI / 180;
 };
 
 const radToDeg = function(radians) {
-	return (radians * 180.0) / Math.PI;
+	return radians * 180.0 / Math.PI;
 };
 
 const sinDeg = function(deg) {
-	return Math.sin((deg * 2.0 * Math.PI) / 360.0);
+	return Math.sin(deg * 2.0 * Math.PI / 360.0);
 };
 
 const acosDeg = function(x) {
-	return (Math.acos(x) * 360.0) / (2 * Math.PI);
+	if (x > 1 || x < -1) {
+		throw new Error(`x must be between -1 and 1, but received ${x}.`);
+	}
+	return Math.acos(x) * 360.0 / (2 * Math.PI);
 };
 
 const asinDeg = function(x) {
-	return (Math.asin(x) * 360.0) / (2 * Math.PI);
+	return Math.asin(x) * 360.0 / (2 * Math.PI);
 };
 
 const tanDeg = function(deg) {
-	return Math.tan((deg * 2.0 * Math.PI) / 360.0);
+	return Math.tan(deg * 2.0 * Math.PI / 360.0);
 };
 
 const cosDeg = function(deg) {
-	return Math.cos((deg * 2.0 * Math.PI) / 360.0);
+	return Math.cos(deg * 2.0 * Math.PI / 360.0);
 };
 
 const mod = function(a, b) {
@@ -167,3 +254,4 @@ const mod = function(a, b) {
 	}
 	return result;
 };
+
