@@ -118,7 +118,7 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 						<Link to="/map" replace>
 							<Button variant="contained" color={ currentView === "map" ? "primary" : "default" }>
 								<NavIcon pathD={svgPaths.map} />
-								<span>Map</span>
+								<span className={styles.navText}>Map</span>
 							</Button>
 						</Link>
 					</li>
@@ -126,7 +126,7 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 						<Link to="/visible-satellites-overhead" replace>
 							<Button variant="contained" color={ currentView === "overhead" ? "primary" : "default" }>
 								<NavIcon pathD={svgPaths.overheadSatellites} />
-								<span>Overhead Satellites</span>
+								<span className={styles.navText}>Overhead Satellites</span>
 							</Button>
 						</Link>
 					</li>

@@ -1,0 +1,6 @@
+/* custom media (webpack postcssCustomMedia) */
+@custom-media --viewport-1 (min-width: 100px);
+@custom-media --viewport-4 (min-width: 480px);
+@custom-media --viewport-7 (min-width: 768px);
+@custom-media --viewport-9 (min-width: 992px);
+@custom-media --viewport-12 (min-width: 1200px);

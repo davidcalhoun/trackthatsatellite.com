@@ -56,7 +56,9 @@ const config = {
             options: {
               ident: "postcss",
               plugins: () => [
-                postcssCustomMedia(/* pluginOptions */),
+                postcssCustomMedia({
+                  importFrom: path.resolve(__dirname, "src/shared.css")
+                }),
                 require("autoprefixer")
               ]
             }

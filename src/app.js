@@ -19,7 +19,9 @@ import reducer from "./reducers";
 import { defaultSat } from "./consts";
 import { Map, VisibleSatellites, Settings } from "./pages";
 import { Header } from "./components";
+import "./shared.css";
 import styles from "./app.css";
+
 
 const middleware = [ thunk ]
 if (process.env.NODE_ENV !== 'production') {
