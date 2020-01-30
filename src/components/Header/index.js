@@ -47,6 +47,7 @@ function SearchBox({ tles, className, selectedSatellites = [], onSelectedSatelli
 		<Autocomplete
 			className={className}
 			id="satellite-search"
+			blurOnSelect={true}
 			options={tlesToAutocompleteOptions(tles)}
 			loading={Object.keys(tles).length === 0}
 			getOptionLabel={option => option.title}
