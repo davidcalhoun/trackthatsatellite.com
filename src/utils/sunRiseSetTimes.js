@@ -139,8 +139,6 @@ export const getSunlightTerminatorCoords = function(timestampMS = Date.now()) {
 		}
 	}
 
-	console.log(coords)
-
 	return coords;
 };
 
