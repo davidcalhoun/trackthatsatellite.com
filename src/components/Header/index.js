@@ -94,11 +94,6 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 
 	}, [width, height, breakpoint]);
 
-	useEffect(() => {
-		if (!tles[defaultSatId]) return; 
-		updateSelectedSatellites([defaultSatId]);
-	}, [tles]);
-
 	const handleSatelliteChange = (event, options) => {
 		if (!options) return;
 		const { noradID } = options;
