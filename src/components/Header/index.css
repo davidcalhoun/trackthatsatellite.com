@@ -3,6 +3,7 @@
     padding: 0.1rem 1rem;
     align-items: center;
     min-height: 5rem;
+    flex-flow: row wrap;
 }
 
 .container a {
@@ -66,8 +67,23 @@
     display: none;
 }
 
+@media (--viewport-1) {
+  .title {
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  .search {
+    width: 100%;
+  }
+}
+
 @media (--viewport-7) {
   .navText {
+    display: block;
+  }
+
+  .search {
     display: block;
   }
 }

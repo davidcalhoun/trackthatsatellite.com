@@ -9,9 +9,9 @@ export const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZnJhbmtzdmFsbGkiLCJhIjoiSFd2NDgxd
 export const TLE_SOURCE_URL = "https://www.trackthatsatellite.com/data/tles.txt";
 
 export const BREAKPOINTS = {
-	"viewport-1": 100,
-	"viewport-4": 480,
-	"viewport-7": 768,
-	"viewport-9": 992,
-	"viewport-12": 1200
+	1: 100,
+	4: 480,
+	7: 768,
+	9: 992,
+	12: 1200
 }
