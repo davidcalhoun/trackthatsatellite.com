@@ -9,6 +9,7 @@
     "build-prod": "npm run clean && webpack -p --mode production",
     "build": "npm run build-prod",
     "start": "webpack-dev-server --hot --mode development",
+    "dev": "npm start",
     "test": "jest"
   },
   "author": "David Calhoun",
