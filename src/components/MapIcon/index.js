@@ -15,11 +15,15 @@ export default function MapIcon(props) {
 	let icon;
 	useEffect(() => {
 		icon = new Image(20, 20);
+		icon.addEventListener('load', function() {
+			setImages([`${name}-icon`, icon]);
+		}, false);
 		icon.src = src;
-		setImages([`${name}-icon`, icon]);
 	}, []);
 
-	if (!images.length) return <Fragment />;
+	if (!images.length) {
+		return <Fragment />;
+	}
 
 	return (
 		<Layer

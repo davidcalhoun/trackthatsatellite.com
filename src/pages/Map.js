@@ -94,8 +94,10 @@ export function Map(props) {
         }
     }, [selectedSatellites]);
 
-    const { coords } = position || { coords: { latitude: 0, longitude: 0 } };
+    const { coords } = position || { coords: {} };
     const { latitude, longitude } = coords;
+
+    console.log(444, position, longitude, latitude)
 
     function updatePopup({ isVisible, tle, lngLatArr, name, elevation }) {
         setPopup({
@@ -146,14 +148,16 @@ export function Map(props) {
                 );
             })}
 
-            <MapIcon
-                name="home"
-                longitude={longitude || 0}
-                latitude={latitude || 0}
-                src={homeSVG}
-            />
-
-
+            {
+                longitude && latitude && (
+                    <MapIcon
+                        name="home"
+                        longitude={longitude}
+                        latitude={latitude}
+                        src={homeSVG}
+                    />
+                )
+            }
         </MapboxGl>
     );
 }
