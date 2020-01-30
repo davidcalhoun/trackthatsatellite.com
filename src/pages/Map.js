@@ -44,11 +44,13 @@ export function Map(props) {
         position,
         tles,
         fetchTLEs,
-        selectedSatellites
+        selectedSatellites,
+        breakpoint
     } = props;
     let match = useRouteMatch();
     let { satellites: satellitesInURL } = useParams();
     const [groundTracks, setGroundTracks] = useState([]);
+    const [map, setMap] = useState(null);
     const [sunTerminatorTS, setSunTerminatorTS] = useState(null);
     const history = useHistory();
     const [popup, setPopup] = useState({ popupIsVisible: false });
@@ -62,6 +64,16 @@ export function Map(props) {
 
     const layerId = true ? "satellite" : "outdoors";
     const style = `mapbox://styles/mapbox/${layerId}-v9`;
+
+    useEffect(() => {
+        if (map) {
+            map.resize();
+        }
+    }, [breakpoint]);
+
+    function handleStyleLoad(map) {
+        setMap(map);
+    }
 
     function init() {
         document.title = `Map - ${siteName}`;
@@ -115,6 +127,8 @@ export function Map(props) {
             zoom={[1.4]}
             center={[0, 20]}
             circleRadius={30}
+            breakpoint={breakpoint}
+            onStyleLoad={handleStyleLoad}
         >
             <SunlightTerminator timestampMS={sunTerminatorTS} />
             <ZoomControl />

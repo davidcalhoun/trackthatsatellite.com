@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { tlesToAutocompleteOptions, useWindowResize } from "../../utils";
 import { path } from "ramda";
 import { setSelectedSatellites } from "../../actions";
-import { BREAKPOINTS, defaultSatId } from "../../consts";
+import { defaultSatId } from "../../consts";
 
 import styles from "./index.css";
 
@@ -53,9 +53,8 @@ const StyledNavButton = withStyles({
   }
 })(Button);
 
-function Search({ tles, className, selectedSatellites = [], onSelectedSatelliteChange }) {
+function Search({ breakpoint, tles, className, selectedSatellites = [], onSelectedSatelliteChange }) {
 	const [inputValue, setInputValue] = useState('');
-	const [{width, height, breakpoint}, {addResizeListener, removeResizeListener}] = useWindowResize(BREAKPOINTS);
 
 	useEffect(() => {
 		const selectedSatName = path([0, 0], selectedSatellites) || "";
@@ -116,13 +115,7 @@ function TimeSelect(props) {
 
 
 
-function Header({ tles, selectedSatellites, updateSelectedSatellites, currentView }) {
-	const [{width, height, breakpoint}, {addResizeListener, removeResizeListener}] = useWindowResize(BREAKPOINTS);
-
-	useEffect(() => {
-
-	}, [width, height, breakpoint]);
-
+function Header({ breakpoint, tles, selectedSatellites, updateSelectedSatellites, currentView }) {
 	const handleSatelliteChange = (event, options) => {
 		if (!options) return;
 		const { noradID } = options;
@@ -138,12 +131,6 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 
 	useEffect(() => {
 		document.documentElement.classList.remove("no-js");
-
-		addResizeListener();
-
-		return () => {
-			removeResizeListener();
-		}
 	}, []);
 
 	return (
@@ -189,6 +176,7 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 						tles={tles}
 						selectedSatellites={selectedSatellites}
 						onSelectedSatelliteChange={handleSatelliteChange}
+						breakpoint={breakpoint}
 					/>
 				)
 			}

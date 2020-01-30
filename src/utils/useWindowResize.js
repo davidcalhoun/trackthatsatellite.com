@@ -7,6 +7,13 @@ export default function useWindowResize(breakpoints = {}) {
 		breakpoint: getBreakpoint(window.innerWidth)
 	});
 
+	const init = () => {
+		set();
+
+		return unset;
+	};
+	useEffect(init, []);
+
 	function getBreakpoint(screenWidth) {
 		if (Object.keys(breakpoints).length > 0) {
 			const points = Object.entries(breakpoints).sort(([name1, width1], [name2, width2]) => width2 < width1);
@@ -31,10 +38,12 @@ export default function useWindowResize(breakpoints = {}) {
 
 	function set() {
 		window.addEventListener("resize", handleResize);
+		window.addEventListener("orientationchange", handleResize);
 	}
 
 	function unset() {
 		window.removeEventListener("resize", handleResize);
+		window.removeEventListener("orientationchange", handleResize);
 	}
 
 	return [

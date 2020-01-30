@@ -21,6 +21,8 @@ import { Map, VisibleSatellites, Settings } from "./pages";
 import { Header } from "./components";
 import "./shared.css";
 import styles from "./app.css";
+import { BREAKPOINTS } from "./consts"
+import { useWindowResize } from "./utils";;
 
 
 const middleware = [ thunk ]
@@ -34,6 +36,7 @@ const store = createStore(
 )
 
 function App() {
+	const [{width, height, breakpoint}] = useWindowResize(BREAKPOINTS);
 	document.documentElement.classList.remove("loading");
 
 	useEffect(() => {
@@ -44,18 +47,18 @@ function App() {
 		<Provider store={store}>
 			<Router>
 				<React.StrictMode>
-					<Header />
+					<Header breakpoint={breakpoint} />
 					<Switch>
 						<Redirect exact from="/" to={`/map/${defaultSat}`} />
 						<Redirect exact from="/map" to={`/map/${defaultSat}`} />
 						<Route path={`/map/:satellites`}>
-							<Map />
+							<Map breakpoint={breakpoint} />
 						</Route>
 						<Route path="/visible-satellites-overhead">
-							<VisibleSatellites />
+							<VisibleSatellites breakpoint={breakpoint} />
 						</Route>
 						<Route path="/settings">
-							<Settings />
+							<Settings breakpoint={breakpoint} />
 						</Route>
 					</Switch>
 				</React.StrictMode>
