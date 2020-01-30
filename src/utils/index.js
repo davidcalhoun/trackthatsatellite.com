@@ -67,7 +67,7 @@ export const tlesToAutocompleteOptions = (tles = {}) => {
 }
 
 const toURLFriendlySatName = nameStr => {
-	return nameStr.replace(/\(|\)/g, "").replace(/\s/g, "-").toLowerCase();
+	return nameStr.replace(/\(|\)|\//g, "").replace(/\s/g, "-").toLowerCase();
 }
 
 export const satsToURLString = tles => {
