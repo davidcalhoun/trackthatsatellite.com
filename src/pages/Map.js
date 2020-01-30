@@ -97,8 +97,6 @@ export function Map(props) {
     const { coords } = position || { coords: {} };
     const { latitude, longitude } = coords;
 
-    console.log(444, position, longitude, latitude)
-
     function updatePopup({ isVisible, tle, lngLatArr, name, elevation }) {
         setPopup({
             isVisible,
