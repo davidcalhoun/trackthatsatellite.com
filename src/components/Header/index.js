@@ -106,6 +106,13 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 	}
 
 	useEffect(() => {
+		if (!selectedSatellites || selectedSatellites.length === 0) return;
+
+		const satname = selectedSatellites[0][0].trim();
+		document.title = `${satname} - Track That Satellite!`;
+	}, [selectedSatellites]);
+
+	useEffect(() => {
 		document.documentElement.classList.remove("no-js");
 
 		addResizeListener();
