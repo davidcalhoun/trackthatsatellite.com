@@ -81,6 +81,12 @@ function NavIcon(props) {
 	);
 }
 
+function TimeSelect(props) {
+	return (
+		<div></div>
+	)
+}
+
 function Header({ tles, selectedSatellites, updateSelectedSatellites, currentView }) {
 	const [{width, height, breakpoint}, {addResizeListener, removeResizeListener}] = useWindowResize(BREAKPOINTS);
 
@@ -140,6 +146,11 @@ function Header({ tles, selectedSatellites, updateSelectedSatellites, currentVie
 					{/* </li> */}
 				</ul>
 			</nav>
+			{
+				currentView === "map" && (
+					<TimeSelect />
+				)
+			}
 			{
 				currentView === "map" && (
 					<SearchBox

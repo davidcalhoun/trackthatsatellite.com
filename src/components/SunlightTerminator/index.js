@@ -34,6 +34,7 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 	// 	]
 	// ];
 
+	// TODO: only works when north is in winter, need to invert logic for summer
 	const fillCoords = [
 		[
 			[180, 90],
@@ -50,11 +51,11 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 			{/* 	key={coordinates[0].toString()} */}
 			{/* 	type="line" */}
 			{/* 	paint={{ */}
-			{/* 		"line-color": "red", */}
+			{/* 		"line-color": "yellow", */}
 			{/* 		"line-width": 2 */}
 			{/* 	}} */}
 			{/* > */}
-			{/* 	<Feature coordinates={coordinates} /> */}
+			{/* 	<Feature coordinates={fillCoords[0]} /> */}
 			{/* </Layer> */}
 			<Layer
 				key={`${coordinates[0].toString()}-fill`}

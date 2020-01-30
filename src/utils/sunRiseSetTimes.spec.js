@@ -61,6 +61,20 @@ describe('isInSunlight', () => {
 		expect(result).toBe(false);
 	});
 	
+	test('10', () => {
+		const result = isInSunlight(1580137468009, [-13.5, -70.76171875]);
+		expect(result).toBe(null);
+	});
+
+	test('11', () => {
+		const result = isInSunlight(1580163005594, [179, -70.3125]);
+		expect(result).toBe(null);
+	});
+
+	test('12', () => {
+		const result = isInSunlight(1580163005594, [-149.144400, 65.036903]);
+		expect(result).toBe(true);
+	});
 });
 
 describe('extendsOverTerminator', () => {
@@ -83,4 +97,11 @@ describe('extendsOverTerminator', () => {
 		const result = extendsOverTerminator(1580087591239, [0, -71.25], [0, -70]);
 		expect(result).toBe(false);
 	});
+
+	test('5', () => {
+		const result = extendsOverTerminator(1580137468009, [-13.5, -70.76171875], [-13.5, -70.78125]);
+		expect(result).toBe(null);
+	});
+
+
 });

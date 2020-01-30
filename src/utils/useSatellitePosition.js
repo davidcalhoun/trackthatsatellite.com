@@ -44,6 +44,7 @@ export default function useSatellitePosition(tle) {
 
 	function updatePosition() {
 		const now = Date.now();
+		//const now = 1580372100000;
 
 		let satMeta;
 		try {

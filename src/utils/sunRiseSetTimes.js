@@ -18,13 +18,18 @@ export const isInSunlight = (timestampMS, [lng, lat]) => {
 	const sunriseTime = sunrise(timestampMS, lat, lng);
 	const sunsetTime = sunset(timestampMS, lat, lng);
 
-	if (sunriseTime === null && sunsetTime === null) {
+//console.log(88, lat, lng, sunriseTime, sunsetTime, new Date(timestampMS))
+
+	if (sunriseTime === null || sunsetTime === null) {
 		// long winter/summer
 		return null;
 	}
-//console.log(88, sunriseTime, sunsetTime, new Date(timestampMS))
+
 	if (sunsetTime < sunriseTime) {
-		return timestampMS < sunsetTime;
+		//return timestampMS > sunriseTime;
+		//return null;
+		//console.log(88, lat, lng, sunriseTime, sunsetTime, new Date(timestampMS))
+		return timestampMS < sunsetTime || timestampMS > sunriseTime;
 	} else {
 		return timestampMS > sunriseTime && timestampMS < sunsetTime;
 	}
@@ -42,9 +47,12 @@ export const extendsOverTerminator = (timestampMS, coords1, coords2) => {
 		return null;
 	}
 
-	if (coords1IsInSunlight === null && typeof coords2IsInSunlight === 'boolean' ||
-		coords2IsInSunlight === null && typeof coords1IsInSunlight === 'boolean') {
+	if (coords1IsInSunlight === null && typeof coords2IsInSunlight === 'boolean') {
 		return !coords2IsInSunlight;
+	}
+
+	if (coords2IsInSunlight === null && typeof coords1IsInSunlight === 'boolean') {
+		return !coords1IsInSunlight;
 	}
 
 	return (
@@ -56,7 +64,7 @@ export const extendsOverTerminator = (timestampMS, coords1, coords2) => {
 const getTerminatorForLng = (timestampMS, lng) => {
 	let tries = 1;
 	let curLat = -90;
-	let step = 10;
+	let step = 5;
 	while (curLat < 90) {
 		const crossesTerminator = extendsOverTerminator(timestampMS, [lng, curLat], [lng, curLat + step]);
 
@@ -94,7 +102,17 @@ const getTerminatorForLng = (timestampMS, lng) => {
 				step /= 2;
 			}
 		} else {
-			curLat += step;
+			if (crossesTerminator !== null) {
+				curLat += step;
+			} else {
+				//console.log(111, 'null result')
+				//console.log('slow stepping...', curLat, lng);
+				curLat += step;
+			}
+		}
+
+		if (curLat > 80) {
+			//console.log(111, 'oops?', curLat, lng)
 		}
 
 		tries++;
@@ -120,6 +138,8 @@ export const getSunlightTerminatorCoords = function(timestampMS = Date.now()) {
 			curLng += 2;
 		}
 	}
+
+	console.log(coords)
 
 	return coords;
 };
