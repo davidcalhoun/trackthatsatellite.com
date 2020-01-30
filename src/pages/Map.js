@@ -112,8 +112,8 @@ export function Map(props) {
             style={style}
             containerStyle={{}}
             className={styles.mapContainer}
-            zoom={[1]}
-            center={[-0.120736, 51.5118219]}
+            zoom={[1.4]}
+            center={[0, 20]}
             circleRadius={30}
         >
             <SunlightTerminator timestampMS={sunTerminatorTS} />
