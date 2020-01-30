@@ -65,6 +65,7 @@ const geolocation = (state = initialGeolocationState, action) => {
         position: action.position
       }
     case FAILED_GEOLOCATION:
+      alert('Failed to fetch geolocation.');
       return {
         ...state,
         error: action.error,
