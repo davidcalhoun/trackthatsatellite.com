@@ -104,8 +104,7 @@ const config = {
         "main"
       ],
       chunksSortMode: "manual" // manual: sort in the order of the chunks array
-    }),
-    new BundleAnalyzerPlugin()
+    })
   ],
   optimization: {
     runtimeChunk: "single",
@@ -168,6 +167,10 @@ module.exports = (env, argv) => {
   if (argv.hot) {
     // Hack: cannot use 'contenthash' when hot reloading is enabled.
     config.output.filename = "[name].[hash].js";
+  }
+
+  if (argv.mode === 'production') {
+    config.plugins.push(new BundleAnalyzerPlugin());
   }
 
   return config;
