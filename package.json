@@ -53,10 +53,9 @@
   "dependencies": {
     "@material-ui/core": "^4.9.2",
     "@material-ui/lab": "^4.0.0-alpha.42",
-    "date-fns": "^2.8.1",
-    "mapbox-gl": "^1.5.1",
-    "prop-types": "^15.7.2",
-    "ramda": "^0.26.1",
+    "date-fns": "^2.9.0",
+    "mapbox-gl": "^1.7.0",
+    "ramda": "^0.27.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hook-visible-satellites": "^1.1.1",
