@@ -130,7 +130,7 @@ export function Map(props) {
             breakpoint={breakpoint}
             onStyleLoad={handleStyleLoad}
         >
-            <SunlightTerminator timestampMS={sunTerminatorTS} />
+            {/* <SunlightTerminator timestampMS={sunTerminatorTS} /> */}
             <ZoomControl />
             <RotationControl style={{ top: 80 }} />
 
