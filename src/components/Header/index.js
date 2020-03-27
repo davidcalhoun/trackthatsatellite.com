@@ -126,7 +126,7 @@ function Header({ breakpoint, tles, selectedSatellites, updateSelectedSatellites
 		if (!selectedSatellites || selectedSatellites.length === 0) return;
 
 		const satname = selectedSatellites[0][0].trim();
-		document.title = `${satname} - Track That Satellite!`;
+		document.title = `${satname} satellite position - Track That Satellite!`;
 	}, [selectedSatellites]);
 
 	useEffect(() => {
