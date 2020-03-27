@@ -34,13 +34,7 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 
 	// TODO: only works when north is in winter, need to invert logic for summer
 	const fillCoords = [
-		[
-			[180, 90],
-			[-179.99999999, 90],
-			[-179.99999999, coordinates[0][1]],
 			...coordinates,
-			[180, coordinates[coordinates.length - 1][1]]
-		]
 	];
 
 	return (
