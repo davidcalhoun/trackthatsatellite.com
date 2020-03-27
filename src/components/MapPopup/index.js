@@ -5,7 +5,7 @@ import ReactMapboxGl, {
 	ScaleControl,
 	ZoomControl,
 	RotationControl,
-	Popup
+	Marker
 } from "react-mapbox-gl";
 import Button from "@material-ui/core/Button";
 import { latLngForDisplay } from "../../utils";
@@ -15,26 +15,26 @@ export default function MapPopup(props) {
 	const { tle, lngLat, name, onClose, elevation } = props;
 
 	return (
-		<Popup
+		<Marker
 			coordinates={lngLat}
 			className={styles.container}
+			anchor="top"
 			offset={{
-				bottom: [0, -38]
+				top: [0, 30]
 			}}
-			anchor="bottom"
 		>
 			<header className={styles.header}>
 				<p>{name}</p>
 			</header>
 			<div className={styles.main}>
-				<p>Position: {latLngForDisplay(lngLat)}</p>
+				<p>{latLngForDisplay(lngLat)}</p>
 				<p>Elevation: {elevation.toFixed(2)}°</p>
 			</div>
-			<footer className={styles.footer}>
-				<Button variant="contained" color="primary" onClick={onClose}>
-					Close
-				</Button>
-			</footer>
-		</Popup>
+			{/* <footer className={styles.footer}> */}
+			{/* 	<Button variant="contained" color="primary" onClick={onClose}> */}
+			{/* 		Close */}
+			{/* 	</Button> */}
+			{/* </footer> */}
+		</Marker>
 	);
 }

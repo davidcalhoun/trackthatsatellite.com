@@ -9,6 +9,8 @@ import ReactMapboxGl, {
 import { getSunlightTerminatorCoords } from "../../utils";
 
 export default function SunlightTerminator({ timestampMS = Date.now() }) {
+	return null;
+
 	const [coordinates, setCoordinates] = useState(null);
 
 	function init() {
@@ -16,6 +18,7 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 		const coords = getSunlightTerminatorCoords(timestampMS);
 		console.timeEnd("getSunlightTerminatorCoords");
 		setCoordinates(coords);
+		console.log('terminator', coords)
 	}
 	useEffect(init, []);
 
@@ -37,28 +40,30 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 			...coordinates,
 	];
 
+	console.log(999, coordinates)
+
 	return (
 		<Fragment>
-			{/* <Layer */}
-			{/* 	key={coordinates[0].toString()} */}
-			{/* 	type="line" */}
-			{/* 	paint={{ */}
-			{/* 		"line-color": "yellow", */}
-			{/* 		"line-width": 2 */}
-			{/* 	}} */}
-			{/* > */}
-			{/* 	<Feature coordinates={fillCoords[0]} /> */}
-			{/* </Layer> */}
 			<Layer
-				key={`${coordinates[0].toString()}-fill`}
-				type="fill"
+				key="terminator"
+				type="line"
 				paint={{
-					"fill-color": "black",
-					"fill-opacity": 0.75
+					"line-color": "red",
+					"line-width": 5
 				}}
 			>
-				<Feature coordinates={fillCoords} />
+				<Feature coordinates={coordinates} />
 			</Layer>
+			{/* <Layer */}
+			{/* 	key={`${coordinates[0].toString()}-fill`} */}
+			{/* 	type="fill" */}
+			{/* 	paint={{ */}
+			{/* 		"fill-color": "black", */}
+			{/* 		"fill-opacity": 0.75 */}
+			{/* 	}} */}
+			{/* > */}
+			{/* 	<Feature coordinates={fillCoords} /> */}
+			{/* </Layer> */}
 		</Fragment>
 	);
 }

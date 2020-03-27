@@ -13,7 +13,7 @@ export const getNORADSatNum = satetelliteNameInURL => {
 
 export const latLngForDisplay = ([lon, lat] = []) => {
 	if (!lat || !lon) return "";
-	return `${ lat.toFixed(2) }, ${ lon.toFixed(2) }`;
+	return `${ lat.toFixed(2) }°, ${ lon.toFixed(2) }°`;
 }
 
 const toFullYear = twoDigitYear => {

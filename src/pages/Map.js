@@ -118,6 +118,13 @@ export function Map(props) {
         });
     }
 
+    function handleClick() {
+        setPopup({
+            ...popup,
+            popupIsVisible: false
+        });
+    }
+
     return (
         <MapboxGl
             style={style}
@@ -128,6 +135,7 @@ export function Map(props) {
             circleRadius={30}
             breakpoint={breakpoint}
             onStyleLoad={handleStyleLoad}
+            onClick={handleClick}
         >
             <SunlightTerminator timestampMS={sunTerminatorTS} />
             <ZoomControl />
