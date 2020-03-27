@@ -31,8 +31,6 @@ import {
     MapIcon,
     SunlightTerminator
 } from "../components";
-import * as TLEJS from "tle.js";
-const tlejs = new TLEJS();
 
 const MapboxGl = ReactMapboxGl({
     accessToken
@@ -50,6 +48,7 @@ export function Map(props) {
     let match = useRouteMatch();
     let { satellites: satellitesInURL } = useParams();
     const [groundTracks, setGroundTracks] = useState([]);
+    const [groundTracksBaseTime, setGroundTracksBaseTime] = useState(Date.now());
     const [map, setMap] = useState(null);
     const [sunTerminatorTS, setSunTerminatorTS] = useState(null);
     const history = useHistory();
@@ -130,7 +129,7 @@ export function Map(props) {
             breakpoint={breakpoint}
             onStyleLoad={handleStyleLoad}
         >
-            {/* <SunlightTerminator timestampMS={sunTerminatorTS} /> */}
+            <SunlightTerminator timestampMS={sunTerminatorTS} />
             <ZoomControl />
             <RotationControl style={{ top: 80 }} />
 
@@ -155,7 +154,7 @@ export function Map(props) {
                             updatePopup={updatePopup}
                             popupIsVisible={popupIsVisible}
                         />
-                        <GroundTrack tle={tle} baseTime={Date.now()} />
+                        <GroundTrack tle={tle} baseTime={groundTracksBaseTime} />
                     </Fragment>
                 );
             })}
