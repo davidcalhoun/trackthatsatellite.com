@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import * as TLEJS from "tle.js";
-
-const tlejs = new TLEJS();
+import { getSatelliteName, getCatalogNumber, getSatelliteInfo } from "tle.js";
 
 /**
  *
@@ -24,8 +22,8 @@ export default function useSatellitePosition(tle) {
 	useEffect(() => {
 		setMetadata({
 			...metadata,
-			name: tlejs.getSatelliteName(tle),
-			id: tlejs.getSatelliteNumber(tle)
+			name: getSatelliteName(tle),
+			id: getCatalogNumber(tle)
 		});
 
 		const timer = setInterval(updatePosition, updateInterval);
@@ -38,7 +36,7 @@ export default function useSatellitePosition(tle) {
 	useEffect(() => {
 		setMetadata({
 			...metadata,
-			name: tlejs.getSatelliteName(tle)
+			name: getSatelliteName(tle)
 		});
 	}, [tle]);
 
@@ -48,7 +46,7 @@ export default function useSatellitePosition(tle) {
 
 		let satMeta;
 		try {
-			satMeta = tlejs.getSatelliteInfo(tle, now);
+			satMeta = getSatelliteInfo(tle, now);
 		} catch(e) {
 			// Orbit may be decayed.
 			console.error(e);

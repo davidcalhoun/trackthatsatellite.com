@@ -1,7 +1,6 @@
 import { format as formatTime } from "date-fns";
 import { sortBy, prop } from "ramda";
-import * as TLEJS from "tle.js";
-const tlejs = new TLEJS();
+import { getSatelliteName, getCatalogNumber, getCOSPAR } from "tle.js";
 
 export { default as useSatellitePosition } from './useSatellitePosition';
 export { default as useWindowResize } from './useWindowResize';
@@ -23,13 +22,9 @@ const toFullYear = twoDigitYear => {
 }
 
 const getSatelliteNameVariants = tle => {
-	const name = tlejs.getSatelliteName(tle);
-	const noradID = tlejs.getSatelliteNumber(tle);
-	const yearTwoDigit = tlejs.getIntDesignatorYear(tle);
-	const launchNumber = tlejs.getIntDesignatorLaunchNumber(tle);
-	const pieceOfLaunch = tlejs.getIntDesignatorPieceOfLaunch(tle);
-
-	const cosparID = `${ toFullYear(yearTwoDigit) }-${ launchNumber }${ pieceOfLaunch }`;
+	const name = getSatelliteName(tle);
+	const noradID = getCatalogNumber(tle);
+	const cosparID = getCOSPAR(tle);
 
 	return {
 		name: name.trim(),
@@ -74,7 +69,7 @@ export const satsToURLString = tles => {
 	return tles.reduce((accum, tle) => {
 		const nameLine = tle[0].trim();
 		const name = toURLFriendlySatName(nameLine);
-		const noradID = tlejs.getSatelliteNumber(tle);
+		const noradID = getCatalogNumber(tle);
 		return accum.concat(`${ name }-${ noradID }`);
 	}, "");
 }

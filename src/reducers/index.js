@@ -6,8 +6,7 @@ import {
   UPDATE_VIEW
 } from '../actions';
 import { splitEvery } from "ramda";
-import * as TLEJS from "tle.js";
-const tlejs = new TLEJS();
+import { getCatalogNumber } from "tle.js";
 
 /**
  * Converts raw TLE file into an array.
@@ -23,10 +22,10 @@ export const splitRawTLEs = rawText => {
 const rawTLEsToHash = rawText => {
   const arr = splitRawTLEs(rawText);
 
-  return arr.reduce((satellites, satellite) => {
-    const NORADSatNumber = tlejs.getSatelliteNumber(satellite);
-    satellites[NORADSatNumber] = satellite;
-    return satellites;
+  return arr.reduce((satelliteTLEs, satelliteTLE) => {
+    const NORADSatNumber = getCatalogNumber(satelliteTLE);
+    satelliteTLEs[NORADSatNumber] = satelliteTLE;
+    return satelliteTLEs;
   }, {});
 }
 

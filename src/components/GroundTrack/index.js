@@ -6,8 +6,7 @@ import ReactMapboxGl, {
 	ZoomControl,
 	RotationControl
 } from "react-mapbox-gl";
-import * as TLEJS from "tle.js";
-const tlejs = new TLEJS();
+import { getGroundTracks } from "tle.js";
 
 const getLineColorFromTrackIndex = index => {
 	switch(index) {
@@ -25,11 +24,19 @@ export default function GroundTrack({ tle, baseTime }) {
 	const [groundTracks, setGroundTracks] = useState([]);
 
 	useEffect(() => {
-		const baseTime = Date.now();
-
-		const tracks = tlejs.getGroundTrackLngLat(tle, 1000, baseTime);
-		setGroundTracks(tracks);
+		updateGroundTracks();
 	}, [tle, baseTime]);
+
+	async function updateGroundTracks() {
+		const tracks = await getGroundTracks({
+			tle,
+			startTimeMS: Date.now(),
+			stepMS: 1000
+		});
+
+		console.log(222, tracks)
+		setGroundTracks(tracks);
+	}
 
 	return (
 		<Fragment>

@@ -7,8 +7,6 @@ import ReactMapboxGl, {
     RotationControl
 } from "react-mapbox-gl";
 import { useSatellitePosition, getSatelliteDisplayName } from "../../utils";
-import * as TLEJS from "tle.js";
-const tlejs = new TLEJS();
 
 export default function SatellitePosition({
     tle,
