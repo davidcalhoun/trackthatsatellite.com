@@ -56,6 +56,7 @@ const config = {
             options: {
               ident: "postcss",
               plugins: () => [
+                require("postcss-global-import"),
                 postcssCustomMedia({
                   importFrom: path.resolve(__dirname, "src/shared.css")
                 }),
