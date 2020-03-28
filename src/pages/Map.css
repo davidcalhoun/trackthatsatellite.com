@@ -5,6 +5,5 @@
 .mapContainer {
 	min-height: 0;
 	flex: 1;
-	position: relative;
 	overflow: hidden; /* Fixes popups sometimes overlapping header. */
 }

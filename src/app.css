@@ -21,6 +21,8 @@
     flex: 1;
     flex-direction: column;
     display: flex;
+    flex-basis: 100vh;
+    overflow: hidden;
 }
 
 @media (--viewport-1) {

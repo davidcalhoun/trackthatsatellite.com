@@ -2,7 +2,7 @@
     display: flex;
     padding: 0.1rem 1rem;
     align-items: center;
-    min-height: 5rem;
+    min-height: 4rem;
     flex-flow: row wrap;
 }
 
@@ -75,6 +75,13 @@
 
   .search {
     width: 100%;
+    break-before: always;
+  }
+}
+
+@media (--viewport-4) {
+  .search {
+    break-before: auto;
   }
 }
 
