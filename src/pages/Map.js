@@ -52,6 +52,10 @@ export function Map(props) {
     const [map, setMap] = useState(null);
     const [sunTerminatorTS, setSunTerminatorTS] = useState(null);
     const history = useHistory();
+    const [viewport, setViewport] = useState({
+        zoom: [1.4],
+        center: [0, 20]
+    });
     const [popup, setPopup] = useState({ popupIsVisible: false });
     const {
         tle: popupTLE,
@@ -125,17 +129,25 @@ export function Map(props) {
         });
     }
 
+    function handleZoom(map, event) {
+        setViewport({
+            ...viewport,
+            zoom: [map.getZoom()]
+        });
+    }
+
     return (
         <MapboxGl
             style={style}
             containerStyle={{}}
             className={styles.mapContainer}
-            zoom={[1.4]}
-            center={[0, 20]}
+            zoom={viewport.zoom}
+            center={viewport.center}
             circleRadius={30}
             breakpoint={breakpoint}
             onStyleLoad={handleStyleLoad}
             onClick={handleClick}
+            onZoomEnd={handleZoom}
         >
             <SunlightTerminator timestampMS={sunTerminatorTS} />
             <ZoomControl />
