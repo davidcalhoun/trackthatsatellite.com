@@ -10,7 +10,8 @@
     "build": "npm run build-prod",
     "start": "webpack-dev-server --hot --mode development",
     "dev": "npm start",
-    "test": "jest"
+    "test": "jest",
+    "bump": "! npm outdated && npm update && npm audit fix"
   },
   "author": "David Calhoun",
   "license": "ISC",
