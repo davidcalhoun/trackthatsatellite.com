@@ -34,7 +34,6 @@ export default function GroundTrack({ tle, baseTime }) {
 			stepMS: 1000
 		});
 
-		console.log(222, tracks)
 		setGroundTracks(tracks);
 	}
 
