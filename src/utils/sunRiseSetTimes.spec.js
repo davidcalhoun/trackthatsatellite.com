@@ -1,4 +1,7 @@
+// import { isInSunlight, extendsOverTerminator } from "./sunRiseSetTimes";
+
 import { isInSunlight, extendsOverTerminator } from "./sunRiseSetTimes";
+
 
 describe('isInSunlight', () => {
 	test('1', () => {
@@ -36,16 +39,6 @@ describe('isInSunlight', () => {
 		expect(result).toBe(true);
 	});
 
-	test('antarctica', () => {
-		const result = isInSunlight(1580081052020, [-88.491108, -82.801708]);
-		expect(result).toBe(null);
-	});
-
-	test('arctic', () => {
-		const result = isInSunlight(1580081052020, [-94.295244, 82.340691]);
-		expect(result).toBe(null);
-	});
-
 	test('8', () => {
 		const result = isInSunlight(1580085495467, [178, -70]);
 		expect(result).toBe(true);
@@ -60,48 +53,79 @@ describe('isInSunlight', () => {
 		const result = isInSunlight(1580087591239, [-71.25, 0]);
 		expect(result).toBe(false);
 	});
-	
-	test('10', () => {
-		const result = isInSunlight(1580137468009, [-13.5, -70.76171875]);
-		expect(result).toBe(null);
-	});
-
-	test('11', () => {
-		const result = isInSunlight(1580163005594, [179, -70.3125]);
-		expect(result).toBe(null);
-	});
 
 	test('12', () => {
 		const result = isInSunlight(1580163005594, [-149.144400, 65.036903]);
 		expect(result).toBe(true);
 	});
+
+	test('arctic winter', () => {
+		const result = isInSunlight(1613106000000, [1, 90]);
+		expect(result).toBe(null);
+	});
+
+	test('arctic winter', () => {
+		const result = isInSunlight(1613106000000, [1, 75]);
+		expect(result).toBe(null);
+	});
+
+	test('antarctic winter', () => {
+		const result = isInSunlight(1594785600000, [1, -90]);
+		expect(result).toBe(null);
+	});
 });
 
 describe('extendsOverTerminator', () => {
+	const caryCoords = [-78.8878605, 35.561203];
+	const indiaCoords = [77.5001132, 18.4467642];
+
 	test('1', () => {
-		const result = extendsOverTerminator(1580081052020, [-89.920624, 29.635978], [-85.689761, 30.444933]);
+		const result = extendsOverTerminator(1599936624781, caryCoords, indiaCoords);
 		expect(result).toBe(true);
 	});
 
 	test('2', () => {
-		const result = extendsOverTerminator(1580085122132, [-69.628562, -78.157803], [-63.607043, -40.533248]);
+		const result = extendsOverTerminator(1599936624781, [-20.9735549, 21.6970831], indiaCoords);
 		expect(result).toBe(true);
 	});
 
 	test('3', () => {
-		const result = extendsOverTerminator(1580084524343, [-86.312530, -82.801708], [-84.906731, -78.617716]);
+		const result = extendsOverTerminator(1599936624781, [-20.9735549, 21.6970831], [15.5907279, 16.8859513]);
+		expect(result).toBe(true);
+	});
+
+	test('antarctic summer', () => {
+		const result = extendsOverTerminator(1613106000000, [1, -89], [-2, -88]);
 		expect(result).toBe(null);
 	});
 
-	test('4', () => {
-		const result = extendsOverTerminator(1580087591239, [0, -71.25], [0, -70]);
-		expect(result).toBe(false);
-	});
-
-	test('5', () => {
-		const result = extendsOverTerminator(1580137468009, [-13.5, -70.76171875], [-13.5, -70.78125]);
+	test('antarctic winter', () => {
+		const result = extendsOverTerminator(1594785600000, [1, -89], [-2, -88]);
 		expect(result).toBe(null);
 	});
 
+	test('arctic winter', () => {
+		const result = extendsOverTerminator(1613106000000, [1, 89], [-2, 88]);
+		expect(result).toBe(null);
+	});
 
+	test('arctic summer', () => {
+		const result = extendsOverTerminator(1594785600000, [1, 89], [-2, 88]);
+		expect(result).toBe(null);
+	});
+// 
+// 	test('arctic equinox', () => {
+// 		const result = extendsOverTerminator(1600747200000, [1, 89], [-2, 88]);
+// 		expect(result).toBe(null);
+// 	});
+// 
+// 	test('antarctic equinox', () => {
+// 		const result = extendsOverTerminator(1600747200000, [1, 89], [-2, 88]);
+// 		expect(result).toBe(null);
+// 	});
+
+	test('cary sunset', () => {
+		const result = extendsOverTerminator(1599952800000, caryCoords, [-76.4181202, 35.8902675]);
+		expect(result).toBe(true);
+	});
 });

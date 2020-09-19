@@ -2,57 +2,33 @@
  * Based on https://github.com/Triggertrap/sun-js
  */
 
-export const sunrise = function(timestampMS, latitude, longitude, zenith) {
-	return sunriseSet(timestampMS, latitude, longitude, true, zenith);
-};
+import SunCalc from 'suncalc';
 
-export const sunset = function(timestampMS, latitude, longitude, zenith) {
-	return sunriseSet(timestampMS, latitude, longitude, false, zenith);
-};
+const INVALID_DATE = 'Invalid Date';
 
-const areTimesNearby = function(ts1, ts2, maxDiffMS = 60000) {
-	return Math.abs(ts1 - ts2) < maxDiffMS;
-};
+export const getDaylightHours = (timeMS, [lng, lat]) => {
+	const times = SunCalc.getTimes(new Date(timeMS), lat, lng);
+console.log(888, times)
+	return (times.dusk - times.dawn) / (1000 * 60 * 60);
+}
 
-export const isInSunlight = (timestampMS, [lng, lat]) => {
-	const sunriseTime = sunrise(timestampMS, lat, lng);
-	const sunsetTime = sunset(timestampMS, lat, lng);
+export const isInSunlight = (timeMS, [lng, lat]) => {
+	const times = SunCalc.getTimes(new Date(timeMS), lat, lng);
 
-//console.log(88, lat, lng, sunriseTime, sunsetTime, new Date(timestampMS))
-
-	if (sunriseTime === null || sunsetTime === null) {
-		// long winter/summer
+	// Handle polar summer/winter.
+	if (times.sunrise.toString() === INVALID_DATE || times.sunset.toString() === INVALID_DATE) {
 		return null;
 	}
 
-	if (sunsetTime < sunriseTime) {
-		//return timestampMS > sunriseTime;
-		//return null;
-		//console.log(88, lat, lng, sunriseTime, sunsetTime, new Date(timestampMS))
-		return timestampMS < sunsetTime || timestampMS > sunriseTime;
-	} else {
-		return timestampMS > sunriseTime && timestampMS < sunsetTime;
-	}
-// 
-// 	return timestampMS > sunriseTime && timestampMS < sunsetTime;
-};
+	return times.sunrise < timeMS && timeMS < times.sunset;
+}
 
 export const extendsOverTerminator = (timestampMS, coords1, coords2) => {
 	const coords1IsInSunlight = isInSunlight(timestampMS, coords1);
 	const coords2IsInSunlight = isInSunlight(timestampMS, coords2);
 
-	//console.log(555, coords1IsInSunlight, coords2IsInSunlight)
-
-	if (coords1IsInSunlight === null && coords2IsInSunlight === null) {
+	if (coords1IsInSunlight === null || coords2IsInSunlight === null) {
 		return null;
-	}
-
-	if (coords1IsInSunlight === null && typeof coords2IsInSunlight === 'boolean') {
-		return !coords2IsInSunlight;
-	}
-
-	if (coords2IsInSunlight === null && typeof coords1IsInSunlight === 'boolean') {
-		return !coords1IsInSunlight;
 	}
 
 	return (
@@ -61,12 +37,17 @@ export const extendsOverTerminator = (timestampMS, coords1, coords2) => {
 	);
 };
 
-const getTerminatorForLng = (timestampMS, lng) => {
+const areTimesNearby = function(ts1, ts2, maxDiffMS = 60000) {
+	return Math.abs(ts1 - ts2) < maxDiffMS;
+};
+
+
+const getTerminatorForLng = (timestampMS, lng, checkFn = extendsOverTerminator) => {
 	let tries = 1;
 	let curLat = -90;
 	let step = 5;
 	while (curLat < 90) {
-		const crossesTerminator = extendsOverTerminator(timestampMS, [lng, curLat], [lng, curLat + step]);
+		const crossesTerminator = checkFn(timestampMS, [lng, curLat], [lng, curLat + step]);
 
 		if (crossesTerminator) {
 			// Smooth out curves on extreme lats.
@@ -86,7 +67,7 @@ const getTerminatorForLng = (timestampMS, lng) => {
 				// (binary search)
 
 				if (
-					extendsOverTerminator(
+					checkFn(
 						timestampMS,
 						[lng, curLat],
 						[lng, curLat + (step / 2)]
@@ -139,137 +120,18 @@ export const getSunlightTerminatorCoords = function(timestampMS = Date.now()) {
 		}
 	}
 
-	return coords;
+	const isNorthPoleInWinter = isInSunlight(timestampMS, [0, 90]) === null && getDaylightHours(timestampMS, [1, 70]) < 6;
+
+	const startingLat = isNorthPoleInWinter ? 90 : -90;
+
+	return [[
+		[0, startingLat],
+		[-180, startingLat],
+		[-180, coords[0][1]],
+		...coords,
+		[180, coords[0][1]],
+		[180, startingLat]
+	]];
 };
 
-const sunriseSet = function(timestampMS, latitude, longitude, sunrise, zenith) {
-	if (!zenith) {
-		zenith = 90.8333;
-	}
-
-	var hoursFromMeridian = longitude / DEGREES_PER_HOUR,
-		dayOfYear = getDayOfYear(timestampMS),
-		approxTimeOfEventInDays,
-		sunMeanAnomaly,
-		sunTrueLongitude,
-		ascension,
-		rightAscension,
-		lQuadrant,
-		raQuadrant,
-		sinDec,
-		cosDec,
-		localHourAngle,
-		localHour,
-		localMeanTime,
-		time;
-
-	if (sunrise) {
-		approxTimeOfEventInDays = dayOfYear + (6 - hoursFromMeridian) / 24;
-	} else {
-		approxTimeOfEventInDays = dayOfYear + (18.0 - hoursFromMeridian) / 24;
-	}
-
-	sunMeanAnomaly = 0.9856 * approxTimeOfEventInDays - 3.289;
-
-	sunTrueLongitude =
-		sunMeanAnomaly +
-		1.916 * sinDeg(sunMeanAnomaly) +
-		0.02 * sinDeg(2 * sunMeanAnomaly) +
-		282.634;
-	sunTrueLongitude = mod(sunTrueLongitude, 360);
-
-	ascension = 0.91764 * tanDeg(sunTrueLongitude);
-	rightAscension = (360 / (2 * Math.PI)) * Math.atan(ascension);
-	rightAscension = mod(rightAscension, 360);
-
-	lQuadrant = Math.floor(sunTrueLongitude / 90) * 90;
-	raQuadrant = Math.floor(rightAscension / 90) * 90;
-	rightAscension = rightAscension + (lQuadrant - raQuadrant);
-	rightAscension /= DEGREES_PER_HOUR;
-
-	sinDec = 0.39782 * sinDeg(sunTrueLongitude);
-	cosDec = cosDeg(asinDeg(sinDec));
-	const cosLocalHourAngle =
-		(cosDeg(zenith) - sinDec * sinDeg(latitude)) /
-		(cosDec * cosDeg(latitude));
-
-	if (cosLocalHourAngle < -1 || cosLocalHourAngle > 1) {
-		// no sunrise/sunset (long winter or summer)
-		return null;
-	}
-
-	localHourAngle = acosDeg(cosLocalHourAngle);
-
-	if (sunrise) {
-		localHourAngle = 360 - localHourAngle;
-	}
-
-	localHour = localHourAngle / DEGREES_PER_HOUR;
-
-	localMeanTime =
-		localHour + rightAscension - 0.06571 * approxTimeOfEventInDays - 6.622;
-
-	time = localMeanTime - longitude / DEGREES_PER_HOUR;
-	time = mod(time, 24);
-
-	const timeObj = new Date(timestampMS);
-	let midnight = new Date(0);
-	midnight.setUTCFullYear(timeObj.getUTCFullYear());
-	midnight.setUTCMonth(timeObj.getUTCMonth());
-	midnight.setUTCDate(timeObj.getUTCDate());
-
-	var milli = midnight.getTime() + (time * 60 * 60 * 1000);
-
-	return new Date(milli);
-};
-
-const DEGREES_PER_HOUR = 360 / 24;
-
-// Utility functions
-
-const getDayOfYear = function(timestampMS) {
-	const time = new Date(timestampMS);
-	var onejan = new Date(time.getFullYear(), 0, 1);
-	const output = Math.ceil((time - onejan) / 86400000);
-	return output;
-};
-
-const degToRad = function(num) {
-	return num * Math.PI / 180;
-};
-
-const radToDeg = function(radians) {
-	return radians * 180.0 / Math.PI;
-};
-
-const sinDeg = function(deg) {
-	return Math.sin(deg * 2.0 * Math.PI / 360.0);
-};
-
-const acosDeg = function(x) {
-	if (x > 1 || x < -1) {
-		throw new Error(`x must be between -1 and 1, but received ${x}.`);
-	}
-	return Math.acos(x) * 360.0 / (2 * Math.PI);
-};
-
-const asinDeg = function(x) {
-	return Math.asin(x) * 360.0 / (2 * Math.PI);
-};
-
-const tanDeg = function(deg) {
-	return Math.tan(deg * 2.0 * Math.PI / 360.0);
-};
-
-const cosDeg = function(deg) {
-	return Math.cos(deg * 2.0 * Math.PI / 360.0);
-};
-
-const mod = function(a, b) {
-	var result = a % b;
-	if (result < 0) {
-		result += b;
-	}
-	return result;
-};
 
