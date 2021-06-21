@@ -100,6 +100,31 @@
 				}
 			}
 		</style>
+
+		<!-- Start Single Page Apps for GitHub Pages -->
+		<script type="text/javascript">
+			// Single Page Apps for GitHub Pages
+			// MIT License
+			// https://github.com/rafgraph/spa-github-pages
+			// This script checks to see if a redirect is present in the query string,
+			// converts it back into the correct url and adds it to the
+			// browser's history using window.history.replaceState(...),
+			// which won't cause the browser to attempt to load the new url.
+			// When the single page app is loaded further down in this file,
+			// the correct url will be waiting in the browser's history for
+			// the single page app to route accordingly.
+			(function(l) {
+			if (l.search[1] === '/' ) {
+				var decoded = l.search.slice(1).split('&').map(function(s) { 
+				return s.replace(/~and~/g, '&')
+				}).join('?');
+				window.history.replaceState(null, null,
+					l.pathname.slice(0, -1) + decoded + l.hash
+				);
+			}
+			}(window.location))
+		</script>
+		<!-- End Single Page Apps for GitHub Pages -->
 	</head>
 	<body>
 		<div class="loading-indicator sbl-square-to-circle">
@@ -122,5 +147,5 @@
 			gtag("js", new Date());
 			gtag("config", "UA-83942647-2");
 		</script>
-	<script src="/runtime.2854a9a718fab0385989.js"></script><script src="/vendor.7f133801cddee8d4fd65.js"></script><script src="/material.f054d9432ca2b0ea2cf7.js"></script><script src="/mapbox.01676e628b56c30c8794.js"></script><script src="/react.39d9b77d1193cb5fd1c9.js"></script><script src="/satellite.30d005b76b602fb062a4.js"></script><script src="/main.b32c298bf306fe113de2.js"></script></body>
+	<script src="/runtime.2854a9a718fab0385989.js"></script><script src="/material.f054d9432ca2b0ea2cf7.js"></script><script src="/react.188afa2636f5f2d0d2eb.js"></script><script src="/mapbox.01676e628b56c30c8794.js"></script><script src="/satellite.e412830b10391bc2f0ff.js"></script><script src="/main.2d1b71ed1d89c8a543d5.js"></script></body>
 </html>

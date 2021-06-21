@@ -171,7 +171,8 @@ module.exports = (env, argv) => {
   }
 
   if (argv.mode === 'production') {
-    config.plugins.push(new BundleAnalyzerPlugin());
+    // Note: bundle analyzer will prevent subsequent scripts from running (like file copying 404.html)
+    //config.plugins.push(new BundleAnalyzerPlugin());
   }
 
   return config;

@@ -7,7 +7,7 @@
     "clean": "rm -r dist/* || true",
     "build-dev": "npm run clean && webpack -d --mode development",
     "build-prod": "npm run clean && webpack -p --mode production",
-    "build": "npm run build-prod",
+    "build": "npm run build-prod && cp src/static/404.html docs",
     "start": "webpack-dev-server --hot --mode development",
     "dev": "npm start",
     "test": "jest",
