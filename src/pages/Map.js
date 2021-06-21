@@ -149,7 +149,7 @@ export function Map(props) {
             onClick={handleClick}
             onZoomEnd={handleZoom}
         >
-            <SunlightTerminator timestampMS={sunTerminatorTS} />
+            {/* <SunlightTerminator timestampMS={sunTerminatorTS} /> */}
             <ZoomControl />
             <RotationControl style={{ top: 80 }} />
 
