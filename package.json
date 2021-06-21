@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -r dist/* || true",
+    "clean": "(rm docs/*.js && rm -r docs/*.svg) || true",
     "build-dev": "npm run clean && webpack -d --mode development",
     "build-prod": "npm run clean && webpack -p --mode production",
     "build": "npm run build-prod && cp src/static/404.html docs && cp -r src/data docs",
