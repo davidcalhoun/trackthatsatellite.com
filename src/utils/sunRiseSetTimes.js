@@ -112,15 +112,14 @@ export const getSunlightTerminatorCoords = function(timestampMS = Date.now()) {
 			coords.push(lngLat);
 		}
 
-		if (lngLat && (lngLat[1] < -50 || lngLat[1] > 50)) {
-			// extreme lats require greater precision due to map distortion
-			curLng += 0.5;
-		} else {
-			curLng += 2;
-		}
+		// extreme lats require greater precision due to map distortion
+		const isInExtremeLat = lngLat && (lngLat[1] < -50 || lngLat[1] > 50);
+		const step = (isInExtremeLat) ? 0.5 : 2;
+
+		curLng += step;
 	}
 
-	const isNorthPoleInWinter = isInSunlight(timestampMS, [0, 90]) === null && getDaylightHours(timestampMS, [1, 70]) < 6;
+	const isNorthPoleInWinter = isInSunlight(timestampMS, [0, 90]) === null && getDaylightHours(timestampMS, [1, 70]) < 12;
 
 	const startingLat = isNorthPoleInWinter ? 90 : -90;
 
