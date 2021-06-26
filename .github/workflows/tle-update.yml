@@ -17,7 +17,7 @@ jobs:
         uses: test-room-7/action-update-file@v1
         with:
           file-path: |
-            ./docs/data/tles.txt
-            ./tle-archive/*
+            docs/data/tles.txt
+            tle-archive/*
           commit-msg: Daily TLE update (bot)
           github-token: ${{ secrets.GITHUB_TOKEN }}
