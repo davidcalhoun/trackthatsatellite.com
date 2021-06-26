@@ -18,6 +18,6 @@ jobs:
         with:
           file-path: |
             ./docs/data/tles.txt
-            ./tle-archive
+            ./tle-archive/*
           commit-msg: Daily TLE update (bot)
           github-token: ${{ secrets.GITHUB_TOKEN }}
