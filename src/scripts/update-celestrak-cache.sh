@@ -77,5 +77,3 @@ cp "${TEMP_DIR}/_all-tles.txt" "${ARCHIVE_DIR}/${DATE}_tles.txt"
 
 # Cleanup
 rm -r "${TEMP_DIR}"
-# rm "${TEMP_DIR}/_all-tles.txt" || true
-# rm "${TEMP_DIR}/_iss.txt" || true
