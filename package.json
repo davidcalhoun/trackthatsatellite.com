@@ -11,7 +11,8 @@
     "start": "webpack-dev-server --hot --mode development",
     "dev": "npm start",
     "test": "jest",
-    "bump": "! npm outdated && npm update && npm audit fix && npm test || echo 'Package up to date'"
+    "bump": "! npm outdated && npm update && npm audit fix && npm test || echo 'Package up to date'",
+    "tle-update": "./src/scripts/update-celestrak-cache.sh"
   },
   "author": "David Calhoun",
   "license": "ISC",

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 DATE=`date +%Y-%m-%d`
-BASE_URL="https://celestrak.com/NORAD/elements/"
-TEMP_DIR="./trackthatsatellite.com/scripts/tmp/"
-DATA_DIR="./trackthatsatellite.com/data/"
-ARCHIVE_DIR="./trackthatsatellite.com/tle-archive/"
+BASE_URL="https://celestrak.com/NORAD/elements"
+TEMP_DIR="./src/data/tmp"
+DATA_DIR="./docs/data"
+ARCHIVE_DIR="./tle-archive"
 
 declare -a files=("tle-new"
   "stations"
@@ -48,29 +48,34 @@ declare -a files=("tle-new"
   "active"
 )
 
+mkdir "${TEMP_DIR}"
+
 # Fetch each file.
 declare -i i=1
 for filename in "${files[@]}"
 do
   echo "Progress: ${i}/${#files[@]}: ${filename}"
-  curl "${BASE_URL}${filename}.txt" > "${TEMP_DIR}${filename}.txt"
+  curl "${BASE_URL}/${filename}.txt" > "${TEMP_DIR}/${filename}.txt"
   # Sleep for a bit to be nice to the Celestrak servers.
   sleep .5
   let i++
 done
 
-# Combine all TLEs.
-cd "${TEMP_DIR}"
-rm _all-tles.txt || true
-rm _iss.txt || true
-cat * >> _all-tles.txt
+# Combines all TLEs.
+cat "${TEMP_DIR}/"* >> "${TEMP_DIR}/_all-tles.txt"
 
 # Extract ISS info to bundle with initial JS payload.
-head -3 stations.txt >> _iss.txt
-cd ~/
+# head -3 stations.txt >> _iss.txt
+# cd ~/
 
-pwd
-cp "${TEMP_DIR}_all-tles.txt" "${DATA_DIR}tles.txt"
-cp "${TEMP_DIR}_all-tles.txt" "${ARCHIVE_DIR}${DATE}_tles.txt"
-tar -cjvf "${ARCHIVE_DIR}${DATE}_tles.bz2" "${ARCHIVE_DIR}${DATE}_tles.txt"
+# Copy to prod data directory.
+cp "${TEMP_DIR}/_all-tles.txt" "${DATA_DIR}/tles.txt"
 
+# Add to TLE archive for this date.
+cp "${TEMP_DIR}/_all-tles.txt" "${ARCHIVE_DIR}/${DATE}_tles.txt"
+# tar -cjvf "${ARCHIVE_DIR}/${DATE}_tles.bz2" "${ARCHIVE_DIR}/${DATE}_tles.txt"
+
+# Cleanup
+rm -r "${TEMP_DIR}"
+# rm "${TEMP_DIR}/_all-tles.txt" || true
+# rm "${TEMP_DIR}/_iss.txt" || true
