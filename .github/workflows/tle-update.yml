@@ -4,17 +4,15 @@ on:
   schedule:
     - cron: "7 12 * * *" # runs daily at 12:07pm
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # Checks out code from Github.
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Fetch new TLEs
         run: npm run tle-update
         shell: bash
       - name: Check in TLE updates
-        uses: actions/checkout@v2
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
