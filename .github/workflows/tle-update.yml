@@ -13,11 +13,10 @@ jobs:
       - name: Fetch new TLEs
         run: npm run tle-update
         shell: bash
-      - name: Check in new TLEs to the repo.
-        uses: test-room-7/action-update-file@v1
-        with:
-          file-path: |
-            docs/data/tles.txt
-            tle-archive/*
-          commit-msg: Daily TLE update (bot)
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Daily TLE update (bot)"
+          git push
