@@ -13,8 +13,9 @@ jobs:
       - name: Fetch new TLEs
         run: npm run tle-update
         shell: bash
-      - uses: actions/checkout@v2
-      - run: |
+      - name: Check in TLE updates
+        uses: actions/checkout@v2
+        run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
