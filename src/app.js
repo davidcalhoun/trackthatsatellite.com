@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect } from "react";
 import {
 	BrowserRouter as Router,
-	Switch,
+	Routes,
 	Route,
 	Link,
-	Redirect,
-	useRouteMatch,
+	Navigate,
 	useParams
 } from "react-router-dom";
-import { hot } from "react-hot-loader/root";
+//import { hot } from "react-hot-loader/root";
 import ReactDOM from "react-dom";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
@@ -41,30 +40,24 @@ function App() {
 
 	useEffect(() => {
 		// action - request geolocation
-	});
+	}, []);
 
 	return (
 		<Provider store={store}>
 			<Router>
 				<React.StrictMode>
 					<Header breakpoint={breakpoint} />
-					<Switch>
-						<Redirect exact from="/" to={`/map/${defaultSat}`} />
-						<Redirect exact from="/map" to={`/map/${defaultSat}`} />
-						<Route path={`/map/:satellites`}>
-							<Map breakpoint={breakpoint} />
-						</Route>
-						<Route path="/visible-satellites-overhead">
-							<VisibleSatellites breakpoint={breakpoint} />
-						</Route>
-						<Route path="/settings">
-							<Settings breakpoint={breakpoint} />
-						</Route>
-					</Switch>
+					<Routes>
+						<Route path="/" element={<Navigate exact from="/" to={`/map/${defaultSat}`} />} />
+						<Route path="/map" element={<Navigate exact from="/map" to={`/map/${defaultSat}`} />} />
+						<Route path={`/map/:satellites`} element={<Map breakpoint={breakpoint} />} />
+						<Route path="/visible-satellites-overhead" element={<VisibleSatellites breakpoint={breakpoint} />} />
+						<Route path="/settings" element={<Settings breakpoint={breakpoint} />} />
+					</Routes>
 				</React.StrictMode>
 			</Router>
 		</Provider>
 	);
 }
 
-export default hot(App);
+export default App;

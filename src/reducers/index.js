@@ -22,11 +22,19 @@ export const splitRawTLEs = rawText => {
 const rawTLEsToHash = rawText => {
   const arr = splitRawTLEs(rawText);
 
-  return arr.reduce((satelliteTLEs, satelliteTLE) => {
+  const output = arr.reduce((satelliteTLEs, satelliteTLE) => {
+    if (!satelliteTLE) {
+      return satelliteTLEs;
+    }
     const NORADSatNumber = getCatalogNumber(satelliteTLE);
-    satelliteTLEs[NORADSatNumber] = satelliteTLE;
+
+    if (NORADSatNumber) {
+      satelliteTLEs[NORADSatNumber] = satelliteTLE;
+    }
     return satelliteTLEs;
   }, {});
+
+  return output
 }
 
 const mapSatsToTLEs = (satelliteIDs = [], tles = []) => {

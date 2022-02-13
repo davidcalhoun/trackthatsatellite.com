@@ -1,70 +1,70 @@
 .container {
-    display: flex;
-    padding: 0.1rem 1rem;
-    align-items: center;
-    min-height: 4rem;
-    flex-flow: row wrap;
+  display: flex;
+  padding: 0.1rem 1rem;
+  align-items: center;
+  min-height: 4rem;
+  flex-flow: row wrap;
 }
 
 .container a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .nav {
-    display: inline-block;
-    flex: 1;
+  display: inline-block;
+  flex: 1;
 }
 
 .nav ul {
-    list-style: none;
-    padding-left: 0.2rem;
-    margin: 0;
-    white-space: pre;
+  list-style: none;
+  padding-left: 0.2rem;
+  margin: 0;
+  white-space: pre;
 }
 
 .nav ul li {
-    display: inline-block;
+  display: inline-block;
 }
 
 .nav ul li:not(:last-child) {
-    padding-right: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .nav a {
-    color: #000079;
+  color: #000079;
 }
 
 .nav a:hover {
-    color: #0000e3;
+  color: #0000e3;
 }
 
 .nav a:active,
 .nav a:focus {
-    color: #1e56ff;
+  color: #1e56ff;
 }
 
 .navIcon {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    fill: currentColor;
-    margin-right: 0.5rem;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  fill: currentColor;
+  margin-right: 0.5rem;
 }
 
 .title {
-    margin: 0 1rem 0 0;
-    display: inline-block;
-    font-size: 1.3rem;
-    font-weight: 200;
+  margin: 0 1rem 0 0;
+  display: inline-block;
+  font-size: 1.3rem;
+  font-weight: 200;
 }
 
 .search {
-    flex: 1;
-    padding: 0.5rem;
+  flex: 1;
+  padding: 0.5rem;
 }
 
 .navText {
-    display: none;
+  /* display: none; */
 }
 
 @media (--viewport-1) {
@@ -94,4 +94,3 @@
     display: block;
   }
 }
-

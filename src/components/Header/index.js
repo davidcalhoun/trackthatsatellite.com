@@ -5,7 +5,6 @@ import {
 	Route,
 	Link,
 	Redirect,
-	useRouteMatch,
 	useParams
 } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
@@ -76,6 +75,7 @@ function Search({ breakpoint, tles, className, selectedSatellites = [], onSelect
 			options={tlesToAutocompleteOptions(tles)}
 			loading={Object.keys(tles).length === 0}
 			getOptionLabel={option => option.title}
+			getOptionSelected={option => option.noradID}
 			inputValue={ inputValue }
 			style={{}}
 			renderInput={params => (

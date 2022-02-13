@@ -14,9 +14,6 @@ export default function useSatellitePosition(tle) {
 		lastUpdated: null,
 		curTimestamp: null
 	});
-	if (!metadata) {
-		console.log(3333, metadata, setMetadata)
-	}
 	const { updateInterval } = metadata;
 
 	useEffect(() => {
