@@ -1,0 +1,6 @@
+/*!
+ * satellite-js v4.1.3
+ * (c) 2013 Shashwat Kandadai and UCSC
+ * https://github.com/shashwatak/satellite-js
+ * License: MIT
+ */

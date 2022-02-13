@@ -7,6 +7,7 @@ export const defaultSatId = "25544";
 export const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZnJhbmtzdmFsbGkiLCJhIjoiSFd2NDgxdyJ9.86RUhUDNQtjWdZysxDIzuw";
 
 export const TLE_SOURCE_URL = "https://www.trackthatsatellite.com/data/tles.txt";
+//export const TLE_SOURCE_URL = "/data/tles.txt";
 
 export const BREAKPOINTS = {
 	1: 100,

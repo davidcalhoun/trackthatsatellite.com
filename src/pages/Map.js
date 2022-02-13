@@ -6,9 +6,9 @@ import {
     Route,
     Link,
     Redirect,
-    useRouteMatch,
+    useMatch,
     useParams,
-    useHistory
+    useNavigate
 } from "react-router-dom";
 import ReactMapboxGl, {
     Layer,
@@ -45,13 +45,12 @@ export function Map(props) {
         selectedSatellites,
         breakpoint
     } = props;
-    let match = useRouteMatch();
     let { satellites: satellitesInURL } = useParams();
     const [groundTracks, setGroundTracks] = useState([]);
     const [groundTracksBaseTime, setGroundTracksBaseTime] = useState(Date.now());
     const [map, setMap] = useState(null);
     const [sunTerminatorTS, setSunTerminatorTS] = useState(null);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [viewport, setViewport] = useState({
         zoom: [1.4],
         center: [0, 20]
@@ -76,6 +75,16 @@ export function Map(props) {
 
     function handleStyleLoad(map) {
         setMap(map);
+
+        // HACK Workaround for https://github.com/alex3165/react-mapbox-gl/issues/904
+        // (ground track and home icon not loading workaround)
+        setTimeout(() => {
+            setViewport({
+                ...viewport,
+                zoom: [parseFloat(map.getZoom() + 0.001)]
+            })
+        }, 500);
+
     }
 
     function init() {
@@ -105,8 +114,17 @@ export function Map(props) {
             satellitesInURL &&
             satellitesInURL !== selectedSats
         ) {
-            history.replace(`/map/${selectedSats}`);
+            navigate(`/map/${selectedSats}`);
         }
+
+        // HACK Workaround for https://github.com/alex3165/react-mapbox-gl/issues/904
+        // (ground track and home icon not loading workaround)
+        setTimeout(() => {
+            setViewport({
+                ...viewport,
+                zoom: [parseFloat(viewport.zoom + 0.001)]
+            })
+        }, 500);
     }, [selectedSatellites]);
 
     const { coords } = position || { coords: {} };
@@ -168,7 +186,7 @@ export function Map(props) {
 
             {selectedSatellites.map(tle => {
                 return (
-                    <Fragment key={tle}>
+                    <Fragment key={tle[0]}>
                         <SatellitePosition
                             tle={tle}
                             updatePopup={updatePopup}
@@ -179,16 +197,13 @@ export function Map(props) {
                 );
             })}
 
-            {
-                longitude && latitude && (
-                    <MapIcon
-                        name="home"
-                        longitude={longitude}
-                        latitude={latitude}
-                        src={homeSVG}
-                    />
-                )
-            }
+            <MapIcon
+                name="home"
+                data-test-id={JSON.stringify(selectedSatellites)}
+                longitude={longitude}
+                latitude={latitude}
+                src={homeSVG}
+            />
         </MapboxGl>
     );
 }

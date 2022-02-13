@@ -54,14 +54,15 @@ const config = {
           {
             loader: "postcss-loader",
             options: {
-              ident: "postcss",
-              plugins: () => [
-                require("postcss-global-import"),
-                postcssCustomMedia({
-                  importFrom: path.resolve(__dirname, "src/shared.css")
-                }),
-                require("autoprefixer")
-              ]
+              postcssOptions: {
+                plugins: () => [
+                  require("postcss-global-import"),
+                  postcssCustomMedia({
+                    importFrom: path.resolve(__dirname, "src/shared.css")
+                  }),
+                  require("autoprefixer")
+                ]
+              }
             }
           }
         ]
@@ -81,7 +82,9 @@ const config = {
     alias: {}
   },
   devServer: {
-    contentBase: "./docs",
+    static: {
+      directory: path.resolve(__dirname, 'docs'),
+    },
     open: true,
     historyApiFallback: true
   },
@@ -109,7 +112,7 @@ const config = {
   ],
   optimization: {
     runtimeChunk: "single",
-    moduleIds: "hashed", // makes sure hashes don't change unexpectedly
+    moduleIds: "deterministic", // makes sure hashes don't change unexpectedly
     splitChunks: {
       cacheGroups: {
         react: {

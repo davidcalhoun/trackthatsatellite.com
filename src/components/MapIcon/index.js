@@ -21,7 +21,8 @@ export default function MapIcon(props) {
 		icon.src = src;
 	}, []);
 
-	if (!images.length) {
+	const hasNullLocation = typeof longitude === 'undefined' || typeof latitude === 'undefined';
+	if (!images.length || hasNullLocation) {
 		return <Fragment />;
 	}
 
@@ -31,7 +32,8 @@ export default function MapIcon(props) {
 			id="home"
 			layout={{
 				"icon-image": `${name}-icon`,
-				"icon-allow-overlap": true
+				"icon-allow-overlap": true,
+				
 			}}
 			images={images}
 		>

@@ -8,7 +8,7 @@ const INVALID_DATE = 'Invalid Date';
 
 export const getDaylightHours = (timeMS, [lng, lat]) => {
 	const times = SunCalc.getTimes(new Date(timeMS), lat, lng);
-console.log(888, times)
+
 	return (times.dusk - times.dawn) / (1000 * 60 * 60);
 }
 

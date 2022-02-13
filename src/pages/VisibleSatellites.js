@@ -6,7 +6,7 @@ import { UPDATE_VIEW, fetchGeolocation, fetchAllTLEs } from "../actions";
 import { getNORADSatNum } from "../utils";
 
 function VisibleSatellites(props) {
-	const { fetchLocation, position, tles, fetchTLEs } = props;
+	const { fetchLocation, position, tles, fetchTLEs, tlesFetching, tlesFailed } = props;
 
 	function init() {
 		document.title = `Overhead Satellites - ${ siteName }`;
@@ -17,19 +17,15 @@ function VisibleSatellites(props) {
 			fetchLocation();
 		}
 
-		if (Object.keys(tles).length === 0) {
+		if (Object.keys(tles).length === 0 && !tlesFetching && !tlesFailed) {
 			fetchTLEs();
 		}
 	}
 	useEffect(init, []);
 
-	useEffect(() => {
-		//console.log(222, position)
-	}, [position]);
-
-	useEffect(() => {
-		//console.log(333, tles)
-	}, [tles]);
+	if (tlesFailed) {
+		console.error(`Failed to fetch TLEs`, tlesFailed);
+	}
 
 	return (
 		<Fragment>
@@ -47,7 +43,9 @@ const mapStateToProps = (state /*, ownProps*/) => {
 	return {
 		currentView: state.view.currentView,
 		position: state.geolocation.position,
-		tles: state.tles.allRaw
+		tles: state.tles.allRaw,
+		tlesFetching: state.tles.isFetching,
+		tlesFailed: state.tles.error
 	};
 }
 

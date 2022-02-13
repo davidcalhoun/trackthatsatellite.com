@@ -22,7 +22,7 @@ export default function SunlightTerminator({ timestampMS = Date.now() }) {
 	useEffect(init, []);
 
 	if(!coordinates || coordinates.length === 0) return null;
-console.log(111, coordinates)
+
 	return (
 		<Fragment>
 			<Layer
