@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATE=`date +%Y-%m-%d`
-BASE_URL="https://celestrak.com/NORAD/elements"
+BASE_URL="https://celestrak.org/NORAD/elements"
 TEMP_DIR="./src/data/tmp"
 DATA_DIR="./docs/data"
 ARCHIVE_DIR="./tle-archive"
