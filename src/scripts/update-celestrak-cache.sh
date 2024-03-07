@@ -45,7 +45,6 @@ declare -a files=("tle-new"
   "radar"
   "cubesat"
   "other"
-  "active"
 )
 
 mkdir "${TEMP_DIR}"
@@ -60,6 +59,9 @@ do
   sleep .5
   let i++
 done
+
+# Inject temporary MSAT TLE
+echo "METHANESAT\n1 99111U 98067A   24067.00000000  .00007327  00000-0  73884-3 0 00005\n2 99111 097.7472 192.2486 0009171 267.4737 229.7526 14.91136514000014" > "${TEMP_DIR}/msat-temp.txt"
 
 # Combines all TLEs.
 cat "${TEMP_DIR}/"* >> "${TEMP_DIR}/_all-tles.txt"
