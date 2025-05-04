@@ -1,0 +1,54 @@
+<head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=argos&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=beidou&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=cubesat&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=dmc&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=galileo&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=geo&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=geodetic&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=glo-ops&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=gps-ops&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=resource&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=sarsat&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=sbas&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=science&amp;FORMAT=tle">here</a></body><!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<title>404 - File Not Found.</title>
+<style type="text/css">
+body{margin:0;font-size:.7em;font-family:Verdana, Arial, Helvetica, sans-serif;background:#EEEEEE;}
+fieldset{padding:0 15px 10px 15px;}
+h1{font-size:2.4em;margin:0;color:#FFF;}
+h2{font-size:1.7em;margin:0;color:#CC0000;}
+h3{font-size:1.2em;margin:10px 0 0 0;color:#000000;}
+#header{width:96%;margin:0 0 0 0;padding:6px 2% 6px 2%;font-family:"trebuchet MS", Verdana, sans-serif;color:#FFF;
+background-color:#555555;}
+#content{margin:0 0 0 2%;position:relative;}
+.content-container{background:#FFF;width:96%;margin-top:8px;padding:10px;position:relative;}
+</style>
+</head>
+<body>
+<div id="header"><h1>Server Error</h1></div>
+<div id="content">
+ <div class="content-container"><fieldset>
+  <h2>404 - File Not Found.</h2>
+  <h3>File not found for celestrak.org/NORAD/elements/ses.txt.</h3>
+  <h3>All legacy static TLE .txt files have now been removed, <a href="https://bsky.app/profile/tskelso.bsky.social/post/3lcbj5bxwtk2i">as originally explained on 2023-12-28</a>.<br>
+    You can find the current queries (available since 2020-05-27 on the <a href="/NORAD/elements/">Current GP Data page</a>.<br>
+    You should update your queries using <a href="/NORAD/documentation/gp-data-formats.php">A New Way to Obtain GP Data</a>.</h3>
+  <h3>Please contact <a href="mailto:ts.kelso@celestrak.org">ts.kelso@celestrak.org</a> if you have questions.</h3>
+ </fieldset></div>
+</div>
+</body>
+</html>
+<head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=tdrss&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&amp;FORMAT=tle">here</a></body>METHANESAT
+1 99111U 98067A   24067.00000000  .00007327  00000-0  73884-3 0 00005
+2 99111 097.7472 192.2486 0009171 267.4737 229.7526 14.91136514000014
+<head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=visual&amp;FORMAT=tle">here</a></body><head><title>Document Moved</title></head>
+<body><h1>Object Moved</h1>This document may be found <a HREF="https://celestrak.org/NORAD/elements/gp.php?GROUP=weather&amp;FORMAT=tle">here</a></body>
