@@ -56,6 +56,9 @@ echo "Done combining TLEs"
 # Copy to prod data directory.
 cp "${TEMP_DIR}/_all-tles.txt" "${DATA_DIR}/tles.txt"
 
+# Copy MethaneSAT TLE to a separate file for convenience
+awk '/^METHANESAT/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" > "${DATA_DIR}/methanesat.txt"
+
 # Add to TLE archive for this date.
 cp "${TEMP_DIR}/_all-tles.txt" "${ARCHIVE_DIR}/${DATE}_tles.txt"
 
