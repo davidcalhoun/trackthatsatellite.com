@@ -1,31 +1,34 @@
 #!/bin/bash
 
 DATE=`date +%Y-%m-%d`
-BASE_URL="https://celestrak.org/NORAD/elements"
+BASE_URL="https://celestrak.org/NORAD/elements/gp.php"
 TEMP_DIR="./src/data/tmp"
 DATA_DIR="./docs/data"
 ARCHIVE_DIR="./tle-archive"
 
-declare -a files=("tle-new"
-  "amateur"
-  "argos"
-  "beidou"
-  "cubesat"
-  "dmc"
-  "galileo"
-  "geo"
-  "geodetic"
-  "glo-ops"
-  "gps-ops"
-  "resource"
-  "sarsat"
-  "sbas"
-  "science"
-  "ses"
-  "stations"
-  "tdrss"
-  "visual"
-  "weather"
+https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&amp;FORMAT=tle
+
+declare -a files=(
+  "active"
+  # "amateur"
+  # "argos"
+  # "beidou"
+  # "cubesat"
+  # "dmc"
+  # "galileo"
+  # "geo"
+  # "geodetic"
+  # "glo-ops"
+  # "gps-ops"
+  # "resource"
+  # "sarsat"
+  # "sbas"
+  # "science"
+  # "ses"
+  # "stations"
+  # "tdrss"
+  # "visual"
+  # "weather"
 )
 
 mkdir "${TEMP_DIR}"
@@ -35,20 +38,13 @@ declare -i i=1
 for filename in "${files[@]}"
 do
   echo "Progress: ${i}/${#files[@]}: ${filename}"
-  curl "${BASE_URL}/${filename}.txt" > "${TEMP_DIR}/${filename}.txt"
+  curl "${BASE_URL}?GROUP=${filename}&amp;FORMAT=tle" > "${TEMP_DIR}/${filename}.txt"
   # Sleep for a bit to be nice to the Celestrak servers.
   sleep .5
   let i++
 done
 
 echo "Done fetching TLEs"
-
-echo "Adding temp MSAT TLE"
-
-# Inject temporary MSAT TLE
-cp "./src/scripts/tmp-msat.txt" "${TEMP_DIR}/tmp-msat.txt"
-
-echo "Done adding temp MSAT TLE"
 
 echo "Combining TLEs"
 
