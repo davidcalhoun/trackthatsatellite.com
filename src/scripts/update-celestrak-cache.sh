@@ -6,8 +6,6 @@ TEMP_DIR="./src/data/tmp"
 DATA_DIR="./docs/data"
 ARCHIVE_DIR="./tle-archive"
 
-https://celestrak.org/NORAD/elements/gp.php?GROUP=amateur&amp;FORMAT=tle
-
 declare -a files=(
   "active"
   # "amateur"
@@ -44,6 +42,9 @@ do
   let i++
 done
 
+# Fetch and append MethaneSAT (inactive)
+curl "https://celestrak.org/NORAD/elements/gp.php?CATNR=59101&amp;FORMAT=tle" >> "${TEMP_DIR}/${filename}.txt"
+
 echo "Done fetching TLEs"
 
 echo "Combining TLEs"
@@ -57,7 +58,28 @@ echo "Done combining TLEs"
 cp "${TEMP_DIR}/_all-tles.txt" "${DATA_DIR}/tles.txt"
 
 # Copy MethaneSAT TLE to a separate file for convenience
-awk '/^METHANESAT/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" > "${DATA_DIR}/methanesat.txt"
+awk '/^METHANESAT/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" > "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GOSAT-GW/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C1/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C2/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C3/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C4/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C5/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C6/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C7/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^GHGSAT-C8/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^SENTINEL-5P/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^ENMAP/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^PRISMA/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^SENTINEL-2A/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^SENTINEL-2B/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^SENTINEL-2C/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+# EMIT is aboard the International Space Station (ISS)
+awk '/^ISS (ZARYA)/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^LANDSAT 8/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+awk '/^LANDSAT 9/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
+# Carbon Mapper is aboard Tanager-1
+awk '/^TANAGER-1/{p=3} p-- > 0' "${TEMP_DIR}/_all-tles.txt" >> "${DATA_DIR}/ghg-satellites.txt"
 
 # Add to TLE archive for this date.
 cp "${TEMP_DIR}/_all-tles.txt" "${ARCHIVE_DIR}/${DATE}_tles.txt"

@@ -1,6 +1,8 @@
 name: TLE update
 on:
   push:
+    branches:
+      - master
   schedule:
     - cron: "7 12 * * *" # runs daily at 12:07pm
 jobs:
